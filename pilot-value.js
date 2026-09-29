@@ -28,7 +28,7 @@ function showCase() {
   const item = useCases.find((entry) => entry.id === byId("case-select").value);
   html("context-title", item ? item.title : "Illustrative general workflow");
   html("context-summary", item ? item.summary : "Select a workflow from the explorer or pick one here. The example inputs remain unchanged until you measure this workflow.");
-  html("context-route", item ? `Suggested starting route: Claude ${item.route}` : "No route selected");
+  showRoute(item);
   html("pilot-text", item ? item.pilot : "Choose a representative, bounded workflow with cleared material and a human reviewer.");
   html("measure-text", item ? item.measure : "Staff time including review; completeness; corrections; service outcome.");
   html("validate-text", item ? item.validate : "Data permissions, source quality, accessibility, human approval, and agency policy.");
@@ -42,6 +42,11 @@ function showCase() {
   if (item) pageUrl.searchParams.set("case", item.id);
   else pageUrl.searchParams.delete("case");
   history.replaceState(null, "", pageUrl);
+}
+
+function showRoute(item) {
+  const alternate = item && item.route !== "API" && Number(byId("api-cost").value) > 0;
+  html("context-route", item ? `Suggested starting route: Claude ${item.route}${alternate ? ". An API token cost is entered, so this estimate assumes an alternate API implementation." : ""}` : "No route selected");
 }
 
 function readValues() {
@@ -69,6 +74,7 @@ function calculate(value) {
 
 function render() {
   const value = readValues();
+  showRoute(useCases.find((entry) => entry.id === byId("case-select").value));
   byId("form-error").hidden = Boolean(value);
   html("form-error", value ? "" : "Enter nonnegative values within each field’s limits. The realization factor must be between 0% and 100%.");
   if (!value) {
