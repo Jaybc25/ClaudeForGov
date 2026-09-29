@@ -69,13 +69,13 @@ function setDetail(item) {
 
 function render() {
   const q = search.value.trim().toLowerCase();
-  const matches = useCases.filter(item =>
-    (view === 'all' || featuredSet.has(item.id)) &&
+  const allMatches = useCases.filter(item =>
     (org.value === 'all' || item.orgs.includes(org.value)) &&
     (department.value === 'all' || item.department === department.value) &&
     (route.value === 'all' || item.route === route.value) &&
     (!q || [item.title, item.summary, departments[item.department], item.route, ...item.orgs.map(key => organizations[key])].join(' ').toLowerCase().includes(q))
   );
+  const matches = view === 'featured' ? allMatches.filter(item => featuredSet.has(item.id)) : allMatches;
   if (view === 'featured') matches.sort((a, b) => featuredCaseIds.indexOf(a.id) - featuredCaseIds.indexOf(b.id));
   featuredButton.setAttribute('aria-pressed', String(view === 'featured'));
   allButton.setAttribute('aria-pressed', String(view === 'all'));
@@ -85,7 +85,7 @@ function render() {
     const empty = element('div', 'empty-state');
     empty.append(element('strong', '', 'No matches yet'));
     empty.append(element('span', '', 'Try another combination or clear the filters.'));
-    if (view === 'featured') {
+    if (view === 'featured' && allMatches.length) {
       const showAll = element('button', 'empty-show-all', 'Search all use cases');
       showAll.type = 'button';
       showAll.addEventListener('click', () => { view = 'all'; render(); });
