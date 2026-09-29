@@ -1,50 +1,102 @@
-const useCases = [
-  {id:'policy-guidance',title:'Find policy guidance faster',route:'Chat',sectors:['state-local','federal','education'],area:'Knowledge work',summary:'Help staff locate and explain approved guidance while retaining source review.',pilot:'Compare time to a verified answer on a fixed set of representative policy questions.',measure:'Time to verified answer; citation accuracy; reviewer corrections.',validate:'Source permissions, version control, permitted data, and human approval before advice is used.'},
-  {id:'public-comments',title:'Synthesize public comments',route:'Chat',sectors:['state-local','federal'],area:'Analysis',summary:'Summarize themes across public feedback without hiding minority views.',pilot:'Analyze a small, previously reviewed comment set and compare themes with a human baseline.',measure:'Analyst time; theme recall; traceability to original comments.',validate:'Privacy, bias, sampling, disclosure obligations, and a documented human review process.'},
-  {id:'grant-drafts',title:'Draft grant narratives',route:'Chat',sectors:['state-local','education'],area:'Writing',summary:'Help teams turn program facts into a first draft for staff review.',pilot:'Draft one section from approved facts and compare revision effort with the current process.',measure:'Drafting time; factual corrections; reviewer effort.',validate:'Source evidence, grant rules, confidential information, and accountable sign-off.'},
-  {id:'budget-briefs',title:'Prepare budget briefings',route:'Chat',sectors:['state-local','federal','education'],area:'Analysis',summary:'Explain budget scenarios and prepare clear narratives from validated figures.',pilot:'Use a historical budget packet to test explanations against analyst-approved numbers.',measure:'Preparation time; numerical accuracy; reviewer corrections.',validate:'Financial data controls, calculation provenance, and approval before publication.'},
-  {id:'case-packets',title:'Assemble casework packets',route:'Cowork',sectors:['state-local','federal'],area:'Operations',summary:'Organize authorized files and produce a draft packet for staff review.',pilot:'Run a bounded, low-risk packet workflow using sample or approved case material.',measure:'Preparation time; missing items; reviewer rework.',validate:'Case data permissions, retention, audit trail, and human ownership of determinations.'},
-  {id:'records-requests',title:'Prepare records request responses',route:'Cowork',sectors:['state-local','federal','education'],area:'Operations',summary:'Help organize responsive materials and draft a review checklist.',pilot:'Use a completed request with cleared files to compare preparation and review steps.',measure:'Time to prepare; completeness; review effort.',validate:'Disclosure law, exemptions, redaction, records retention, and counsel review.'},
-  {id:'inspection-reports',title:'Draft inspection reports',route:'Cowork',sectors:['state-local','federal'],area:'Field operations',summary:'Turn approved notes and attachments into a consistent draft report.',pilot:'Test on historical inspections with known final reports.',measure:'Drafting time; omitted findings; corrections before sign-off.',validate:'Evidence integrity, image handling, professional judgment, and final inspector approval.'},
-  {id:'procurement-briefs',title:'Summarize procurement materials',route:'Cowork',sectors:['state-local','federal','education'],area:'Procurement',summary:'Prepare a structured summary of requirements and vendor submissions for reviewers.',pilot:'Compare summaries of a closed procurement against the original evaluation materials.',measure:'Reviewer time; requirement coverage; unsupported statements.',validate:'Procurement rules, confidentiality, conflicts, and no automated vendor selection.'},
-  {id:'legacy-apps',title:'Modernize an internal application',route:'Code',sectors:['state-local','federal','education'],area:'Software',summary:'Help developers understand a legacy codebase and deliver reviewed changes.',pilot:'Choose one isolated maintenance task with existing tests and a clear rollback.',measure:'Delivery time; test coverage; defects after review.',validate:'Repository access, dependency policy, secure coding, code review, and deployment controls.'},
-  {id:'accessible-forms',title:'Improve digital forms',route:'Code',sectors:['state-local','federal','education'],area:'Digital service',summary:'Help teams implement and test more accessible online forms.',pilot:'Improve one internal or public form and test it with the agency accessibility process.',measure:'Completion rate; accessibility findings; support requests.',validate:'Accessibility standards, privacy, identity flows, and human usability testing.'},
-  {id:'system-integration',title:'Maintain agency integrations',route:'Code',sectors:['state-local','federal'],area:'Software',summary:'Support developers updating connectors between authorized systems.',pilot:'Implement one noncritical integration change in a test environment.',measure:'Implementation time; test failures; incident rate.',validate:'Secrets handling, least privilege, data contracts, monitoring, and rollback.'},
-  {id:'test-coverage',title:'Expand software test coverage',route:'Code',sectors:['state-local','federal','education'],area:'Software',summary:'Help engineering teams identify gaps and write meaningful regression tests.',pilot:'Target a small service with known failure modes and compare coverage quality.',measure:'Relevant test coverage; escaped defects; review effort.',validate:'Test data sensitivity, flaky tests, and independent developer review.'},
-  {id:'resident-assistant',title:'Answer resident service questions',route:'API',sectors:['state-local'],area:'Resident service',summary:'Embed an assistant in an agency service with approved content and human escalation.',pilot:'Test a narrow set of high-volume, low-risk questions before any wider release.',measure:'Resolved inquiries; answer accuracy; escalation rate; cost per interaction.',validate:'Accessibility, multilingual quality, data boundaries, current content, and escalation.'},
-  {id:'permit-status',title:'Explain permit process steps',route:'API',sectors:['state-local'],area:'Resident service',summary:'Guide applicants through published requirements and status explanations.',pilot:'Prototype guidance for one permit type using public instructions and synthetic records.',measure:'Application completion; repeat contacts; incorrect guidance.',validate:'System-of-record accuracy, identity, auditability, and no automated eligibility decision.'},
-  {id:'emergency-information',title:'Help people find emergency information',route:'API',sectors:['state-local','federal'],area:'Public information',summary:'Make approved, current guidance easier to navigate during routine preparedness.',pilot:'Test preparedness questions against a controlled content set outside an active emergency.',measure:'Answer accuracy; time to source; escalation for uncertain responses.',validate:'Update latency, source authority, accessibility, resilience, and emergency communications approval.'},
-  {id:'language-access',title:'Improve language access',route:'API',sectors:['state-local','federal','education'],area:'Public information',summary:'Help visitors understand approved service information in more languages.',pilot:'Evaluate a small set of high-demand pages with qualified bilingual reviewers.',measure:'Comprehension; translation corrections; service completion.',validate:'Language quality, accessibility, authoritative text, and escalation to qualified staff.'}
-];
+const grid = document.getElementById('case-grid');
+const detail = document.getElementById('case-detail');
+const search = document.getElementById('case-search');
+const org = document.getElementById('org-filter');
+const department = document.getElementById('department-filter');
+const route = document.getElementById('route-filter');
+const count = document.getElementById('result-count');
+let selected = new URLSearchParams(location.search).get('case');
 
-const grid=document.getElementById('case-grid');
-const detail=document.getElementById('case-detail');
-const search=document.getElementById('case-search');
-const sector=document.getElementById('sector-filter');
-const route=document.getElementById('route-filter');
-const count=document.getElementById('result-count');
-let selected=new URLSearchParams(location.search).get('case');
+function element(tag, className, value) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (value) node.textContent = value;
+  return node;
+}
 
-function element(tag,className,text){const node=document.createElement(tag);if(className)node.className=className;if(text)node.textContent=text;return node;}
-function setDetail(item){
-  selected=item.id;
-  const url=new URL(location.href);url.searchParams.set('case',item.id);history.replaceState(null,'',url);
+function addOptions(select, options) {
+  for (const [value, label] of Object.entries(options)) {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = label;
+    select.append(option);
+  }
+}
+addOptions(org, organizations);
+addOptions(department, departments);
+
+function setDetail(item) {
+  selected = item.id;
+  const url = new URL(location.href);
+  url.searchParams.set('case', item.id);
+  history.replaceState(null, '', url);
   detail.replaceChildren();
-  detail.append(element('p','detail-kicker',item.area+' / '+item.sectors.map(x=>({'state-local':'State & local',federal:'Federal',education:'Education'})[x]).join(' · ')));
-  detail.append(element('h2','',item.title));detail.append(element('p','',item.summary));
-  const box=element('div','detail-route');box.append(element('span','', 'Suggested starting route'));box.append(element('strong','', 'Claude '+item.route));detail.append(box);
-  for(const [title,value] of [['Pilot to test',item.pilot],['Measure',item.measure],['Validate before deployment',item.validate]]){const section=element('div','detail-section');section.append(element('h3','',title));section.append(element('p','',value));detail.append(section);}
-  detail.append(element('p','detail-disclaimer','This route is a planning hypothesis. Confirm product access, commercial terms, data handling, and agency policy before use.'));
-  grid.querySelectorAll('button[data-id]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.id===selected)));
+  detail.append(element('p', 'detail-kicker', departments[item.department] + ' / ' + item.orgs.map(key => organizations[key]).join(' · ')));
+  detail.append(element('h2', '', item.title));
+  detail.append(element('p', '', item.summary));
+  const box = element('div', 'detail-route');
+  box.append(element('span', '', 'Suggested starting route'));
+  box.append(element('strong', '', 'Claude ' + item.route));
+  detail.append(box);
+  for (const [title, value] of [['Pilot to test', item.pilot], ['Measure', item.measure], ['Validate before deployment', item.validate]]) {
+    const section = element('div', 'detail-section');
+    section.append(element('h3', '', title));
+    section.append(element('p', '', value));
+    detail.append(section);
+  }
+  detail.append(element('p', 'detail-disclaimer', 'This route is a planning hypothesis. Confirm product access, commercial terms, data handling, and agency policy before use.'));
+  grid.querySelectorAll('button[data-id]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.id === selected)));
 }
-function render(){
-  const q=search.value.trim().toLowerCase();
-  const matches=useCases.filter(item=>(sector.value==='all'||item.sectors.includes(sector.value))&&(route.value==='all'||item.route===route.value)&&(!q||[item.title,item.summary,item.area,item.route].join(' ').toLowerCase().includes(q)));
-  count.textContent=matches.length+' use case'+(matches.length===1?'':'s');grid.replaceChildren();
-  if(!matches.length){const empty=element('div','empty-state');empty.append(element('strong','','No matches yet'));empty.append(element('span','','Try a different term or clear the filters.'));grid.append(empty);detail.replaceChildren(element('p','detail-kicker','No matching use case'),element('h2','','Try another search'));return;}
-  for(const item of matches){const card=element('button','case-card');card.type='button';card.dataset.id=item.id;card.setAttribute('aria-pressed',String(item.id===selected));const top=element('div','case-card-top');top.append(element('span','',item.area));top.append(element('span','','Claude '+item.route));card.append(top);card.append(element('h3','',item.title));card.append(element('p','',item.summary));card.append(element('span','case-card-bottom','View pilot and validation questions ↗'));card.addEventListener('click',()=>{setDetail(item);if(window.matchMedia('(max-width: 950px)').matches)detail.scrollIntoView({behavior:'smooth',block:'start'});});grid.append(card);}
-  setDetail(matches.find(item=>item.id===selected)||matches[0]);
+
+function render() {
+  const q = search.value.trim().toLowerCase();
+  const matches = useCases.filter(item =>
+    (org.value === 'all' || item.orgs.includes(org.value)) &&
+    (department.value === 'all' || item.department === department.value) &&
+    (route.value === 'all' || item.route === route.value) &&
+    (!q || [item.title, item.summary, departments[item.department], item.route, ...item.orgs.map(key => organizations[key])].join(' ').toLowerCase().includes(q))
+  );
+  count.textContent = matches.length + ' use case' + (matches.length === 1 ? '' : 's');
+  grid.replaceChildren();
+  if (!matches.length) {
+    const empty = element('div', 'empty-state');
+    empty.append(element('strong', '', 'No matches yet'));
+    empty.append(element('span', '', 'Try another combination or clear the filters.'));
+    grid.append(empty);
+    detail.replaceChildren(element('p', 'detail-kicker', 'No matching use case'), element('h2', '', 'Try another search'));
+    return;
+  }
+  for (const item of matches) {
+    const card = element('button', 'case-card');
+    card.type = 'button';
+    card.dataset.id = item.id;
+    card.setAttribute('aria-pressed', String(item.id === selected));
+    const top = element('div', 'case-card-top');
+    top.append(element('span', '', departments[item.department]));
+    top.append(element('span', '', 'Claude ' + item.route));
+    card.append(top);
+    card.append(element('h3', '', item.title));
+    card.append(element('p', '', item.summary));
+    card.append(element('span', 'case-card-bottom', 'View pilot and validation questions ↗'));
+    card.addEventListener('click', () => {
+      setDetail(item);
+      if (window.matchMedia('(max-width: 950px)').matches) detail.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+    grid.append(card);
+  }
+  setDetail(matches.find(item => item.id === selected) || matches[0]);
 }
-search.addEventListener('input',render);sector.addEventListener('change',render);route.addEventListener('change',render);
-document.getElementById('clear-filters').addEventListener('click',()=>{search.value='';sector.value='all';route.value='all';render();search.focus();});
+
+search.addEventListener('input', render);
+org.addEventListener('change', render);
+department.addEventListener('change', render);
+route.addEventListener('change', render);
+document.getElementById('clear-filters').addEventListener('click', () => {
+  search.value = '';
+  org.value = 'all';
+  department.value = 'all';
+  route.value = 'all';
+  render();
+  search.focus();
+});
 render();
