@@ -5,8 +5,12 @@ const org = document.getElementById('org-filter');
 const department = document.getElementById('department-filter');
 const route = document.getElementById('route-filter');
 const count = document.getElementById('result-count');
+const featuredButton = document.getElementById('view-featured');
+const allButton = document.getElementById('view-all');
+const featuredSet = new Set(featuredCaseIds);
 const initialParams = new URLSearchParams(location.search);
 let selected = initialParams.get('case');
+let view = initialParams.get('view') === 'all' || (selected && useCases.some(item => item.id === selected && !featuredSet.has(item.id))) ? 'all' : 'featured';
 
 function element(tag, className, value) {
   const node = document.createElement(tag);
@@ -35,6 +39,8 @@ function syncUrl(item) {
     if (value === 'all') url.searchParams.delete(key);
     else url.searchParams.set(key, value);
   }
+  if (view === 'all') url.searchParams.set('view', 'all');
+  else url.searchParams.delete('view');
   if (item) url.searchParams.set('case', item.id);
   else url.searchParams.delete('case');
   history.replaceState(null, '', url);
@@ -64,17 +70,27 @@ function setDetail(item) {
 function render() {
   const q = search.value.trim().toLowerCase();
   const matches = useCases.filter(item =>
+    (view === 'all' || featuredSet.has(item.id)) &&
     (org.value === 'all' || item.orgs.includes(org.value)) &&
     (department.value === 'all' || item.department === department.value) &&
     (route.value === 'all' || item.route === route.value) &&
     (!q || [item.title, item.summary, departments[item.department], item.route, ...item.orgs.map(key => organizations[key])].join(' ').toLowerCase().includes(q))
   );
-  count.textContent = matches.length + ' use case' + (matches.length === 1 ? '' : 's');
+  if (view === 'featured') matches.sort((a, b) => featuredCaseIds.indexOf(a.id) - featuredCaseIds.indexOf(b.id));
+  featuredButton.setAttribute('aria-pressed', String(view === 'featured'));
+  allButton.setAttribute('aria-pressed', String(view === 'all'));
+  count.textContent = matches.length + (view === 'featured' ? ' featured' : '') + ' use case' + (matches.length === 1 ? '' : 's');
   grid.replaceChildren();
   if (!matches.length) {
     const empty = element('div', 'empty-state');
     empty.append(element('strong', '', 'No matches yet'));
     empty.append(element('span', '', 'Try another combination or clear the filters.'));
+    if (view === 'featured') {
+      const showAll = element('button', 'empty-show-all', 'Search all use cases');
+      showAll.type = 'button';
+      showAll.addEventListener('click', () => { view = 'all'; render(); });
+      empty.append(showAll);
+    }
     grid.append(empty);
     detail.replaceChildren(element('p', 'detail-kicker', 'No matching use case'), element('h2', '', 'Try another search'));
     syncUrl(null);
@@ -102,6 +118,8 @@ function render() {
 }
 
 search.addEventListener('input', render);
+featuredButton.addEventListener('click', () => { view = 'featured'; render(); });
+allButton.addEventListener('click', () => { view = 'all'; render(); });
 org.addEventListener('change', render);
 department.addEventListener('change', render);
 route.addEventListener('change', render);

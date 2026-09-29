@@ -1,6 +1,6 @@
 # ClaudeForGov use case prioritization
 
-Working editorial decision, September 29, 2026. This reviews the user-supplied Perplexity “Top 30” and the later department list against the 52 workflows in the live ClaudeForGov explorer. The department list labels the executive/clerk section “8” but contains nine bullets, so it has **76 named bullets**, not 75. The two supplied lists overlap each other and the live catalog.
+Working editorial decision, September 29, 2026. This reviews the user-supplied Perplexity “Top 30” and the later department list against the original 52 workflows in ClaudeForGov. The department list labels the executive/clerk section “8” but contains nine bullets, so it has **76 named bullets**, not 75. The two supplied lists overlap each other and the original catalog.
 
 ## Decision
 
@@ -59,10 +59,10 @@ The featured set covers all four routes and multiple departments without implyin
 | Cybersecurity (3) | Vulnerability fixes map to `security-fixes` | Incident summaries/runbooks and authorized alert explanation are distinct from fixing code; service desk assist is another channel | Validate log sensitivity, authorized scope, and response ownership |
 | Cross-cutting language access (1) | Tag public-facing cases for language quality and qualified review | Keep `language-access` as a focused evaluation example, not a copy of every translated notice | Avoid assuming machine translation alone establishes compliance or equitable access |
 
-## Proposed catalog changes
+## Catalog changes and next work
 
-1. Add five distinct cards: solicitation authoring, budget variance reporting, permit completeness, contact-center agent assist, and asset/maintenance synthesis. Consider grant opportunity matching after source-feed design.
-2. Add `featured` metadata to the 16 candidates and a visible Featured / All catalog control. Keep the full searchable basket; do not replace it with only the shortlist.
+1. **Implemented:** Five distinct cards: solicitation authoring, budget variance reporting, permit completeness, contact-center agent assist, and asset/maintenance synthesis. The catalog now has 57 cases. Consider grant opportunity matching after source-feed design.
+2. **Implemented:** A 16-case editorial shortlist and a visible Featured / All catalog control. The full searchable basket remains available.
 3. Support a primary route plus an optional alternative when the same workflow can genuinely be done in staff-directed or embedded form. The detail should explain what changes between routes, including integration and review responsibility.
 4. Add a pilot evidence tier to every featured case: illustrative idea, source-supported pattern, or measured case study. The current site should remain in the first tier until individual evidence is attached.
 5. Keep outcome claims conditional. For example, measure first-contact resolution and answer accuracy alongside contact volume; measure grant reporting timeliness rather than attributing awards to Claude; treat hours returned as capacity until realization is demonstrated.
