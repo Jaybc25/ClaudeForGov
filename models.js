@@ -1,0 +1,68 @@
+"use strict";
+
+// Standard direct Claude API base token prices in USD per million tokens.
+// Source checked 2026-09-29: https://platform.claude.com/docs/en/about-claude/pricing
+// Specs: https://platform.claude.com/docs/en/models/overview
+const MODELS = [
+  { id: "haiku", name: "Claude Haiku 4.5", tier: "Fastest", input: 1, output: 5, context: "200K", maxOutput: "64K", fit: "Try first for high-volume, bounded tasks where speed matters. Validate accuracy and escalation on real cases." },
+  { id: "sonnet", name: "Claude Sonnet 5.5", tier: "Fast", input: 2, output: 10, context: "1M", maxOutput: "128K", fit: "A practical starting candidate for mixed drafting, analysis, and application workflows. Test the actual workload." },
+  { id: "opus", name: "Claude Opus 5.5", tier: "Moderate latency", input: 4, output: 20, context: "1M", maxOutput: "128K", fit: "Evaluate for more demanding coding or multi-step work when added capability may justify the cost." },
+  { id: "fable", name: "Claude Fable 5.1", tier: "Slower", input: 10, output: 50, context: "1M", maxOutput: "128K", fit: "Evaluate for demanding reasoning and long-horizon work, with quality and review effort measured against alternatives." }
+];
+
+const $ = (selector) => document.querySelector(selector);
+const dollars = (value) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: value < 0.01 && value > 0 ? 4 : 2 }).format(value);
+const tokens = (value) => new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value / 1000000) + "M";
+let selected = "sonnet";
+
+function readWorkload() {
+  const inputs = [$("#input-tokens"), $("#output-tokens"), $("#requests-month")];
+  if (inputs.some((input) => !input.validity.valid || input.value.trim() === "" || !Number.isSafeInteger(Number(input.value)))) return null;
+  const [input, output, requests] = inputs.map((field) => Number(field.value));
+  if (input + output === 0 && requests > 0) return null;
+  return { input, output, requests };
+}
+
+function cost(model, workload) {
+  const monthlyInput = workload.input * workload.requests;
+  const monthlyOutput = workload.output * workload.requests;
+  const inputCharge = monthlyInput / 1000000 * model.input;
+  const outputCharge = monthlyOutput / 1000000 * model.output;
+  return { monthlyInput, monthlyOutput, inputCharge, outputCharge, total: inputCharge + outputCharge };
+}
+
+function renderModels() {
+  $("#model-grid").innerHTML = MODELS.map((model) => `<button type="button" class="model-card${model.id === selected ? " is-selected" : ""}" data-model="${model.id}" aria-pressed="${model.id === selected}" aria-label="Select ${model.name} for the cost estimate"><span class="model-card-top"><span>${model.tier}</span><span aria-hidden="true">↗</span></span><strong>${model.name}</strong><span class="model-fit">${model.fit}</span><span class="model-specs"><span>Context <b>${model.context}</b></span><span>Max output <b>${model.maxOutput}</b></span></span><span class="model-prices"><span><small>Input / MTok</small><b>$${model.input}</b></span><span><small>Output / MTok</small><b>$${model.output}</b></span></span><span class="model-select">${model.id === selected ? "Selected for estimate" : "Use in estimate"}</span></button>`).join("");
+  $("#model-grid").querySelectorAll("button").forEach((button) => button.addEventListener("click", () => {
+    selected = button.dataset.model;
+    renderModels();
+    renderEstimate();
+  }));
+}
+
+function renderEstimate() {
+  const workload = readWorkload();
+  const error = $("#form-error");
+  const model = MODELS.find((item) => item.id === selected);
+  $("#selected-model").textContent = model.name;
+  error.hidden = Boolean(workload);
+  error.textContent = workload ? "" : "Enter whole numbers within the shown ranges and at least one token per request when requests are greater than zero.";
+  if (!workload) {
+    ["#monthly-total", "#input-month", "#input-charge", "#output-month", "#output-charge", "#annual-total"].forEach((id) => $(id).textContent = "—");
+    $("#comparison-body").replaceChildren();
+    return;
+  }
+  const result = cost(model, workload);
+  $("#monthly-total").textContent = dollars(result.total);
+  $("#input-month").textContent = tokens(result.monthlyInput);
+  $("#input-charge").textContent = dollars(result.inputCharge);
+  $("#output-month").textContent = tokens(result.monthlyOutput);
+  $("#output-charge").textContent = dollars(result.outputCharge);
+  $("#annual-total").textContent = dollars(result.total * 12);
+  $("#comparison-body").innerHTML = MODELS.map((item) => `<tr${item.id === selected ? ' class="is-selected"' : ""}><th scope="row">${item.name}${item.id === selected ? " <span class=\"row-selected\">Selected</span>" : ""}</th><td>$${item.input}</td><td>$${item.output}</td><td>${dollars(cost(item, workload).total)}</td></tr>`).join("");
+}
+
+$("#estimate-form").addEventListener("input", renderEstimate);
+$("#estimate-form").addEventListener("submit", (event) => event.preventDefault());
+renderModels();
+renderEstimate();
