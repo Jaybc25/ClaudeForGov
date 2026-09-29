@@ -130,7 +130,10 @@ function calculate(value) {
 
 function render() {
   const value = readValues();
-  showRoute(useCases.find((entry) => entry.id === byId("case-select").value));
+  const item = useCases.find((entry) => entry.id === byId("case-select").value);
+  showRoute(item);
+  byId("api-link").hidden = Boolean(item && item.route !== "API" && !currentApiModel && Number(byId("api-cost").value) === 0);
+  byId("api-link").textContent = item && item.route !== "API" ? "Compare an alternate API implementation ↗" : "Estimate direct API token cost ↗";
   for (const id of fields) {
     const field = byId(id);
     const invalid = !field.validity.valid || field.value.trim() === "";
@@ -145,6 +148,7 @@ function render() {
     for (const id of ["net-value", "hours", "annual-value", "annual-cost", "initial-cost", "roi", "payback"]) html(id, "—");
     return;
   }
+  byId("result-example").hidden = !fields.every((id) => value[id] === example[id]);
   const result = calculate(value);
   html("net-value", currency(result.threeYearNet));
   html("net-qualifier", (result.threeYearNet < 0 ? "Negative modeled net capacity value after costs" : "Capacity value proxy after modeled costs, not cash savings") + (byId("alternate-note").hidden ? "" : ". Modeled as an API implementation."));

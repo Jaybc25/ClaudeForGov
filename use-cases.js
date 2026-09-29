@@ -1,5 +1,7 @@
 const grid = document.getElementById('case-grid');
 const detail = document.getElementById('case-detail');
+const catalogLayout = grid.parentElement;
+const narrowLayout = window.matchMedia('(max-width: 950px)');
 const search = document.getElementById('case-search');
 const org = document.getElementById('org-filter');
 const department = document.getElementById('department-filter');
@@ -68,6 +70,13 @@ function setDetail(item) {
   pilotLink.href = 'pilot-value.html?case=' + encodeURIComponent(item.id);
   detail.append(pilotLink);
   grid.querySelectorAll('button[data-id]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.id === selected)));
+  placeDetail();
+}
+
+function placeDetail() {
+  const selectedCard = [...grid.querySelectorAll('button[data-id]')].find(button => button.dataset.id === selected);
+  if (narrowLayout.matches && selectedCard) selectedCard.after(detail);
+  else catalogLayout.append(detail);
 }
 
 function render() {
@@ -96,6 +105,7 @@ function render() {
     }
     grid.append(empty);
     detail.replaceChildren(element('p', 'detail-kicker', 'No matching use case'), element('h2', '', 'Try another search'));
+    placeDetail();
     syncUrl(null);
     return;
   }
@@ -113,7 +123,7 @@ function render() {
     card.append(element('span', 'case-card-bottom', 'View pilot and validation questions ↗'));
     card.addEventListener('click', () => {
       setDetail(item);
-      if (window.matchMedia('(max-width: 950px)').matches) detail.scrollIntoView({behavior:'smooth', block:'start'});
+      if (narrowLayout.matches) detail.scrollIntoView({behavior:'smooth', block:'start'});
     });
     grid.append(card);
   }
@@ -126,6 +136,7 @@ allButton.addEventListener('click', () => { view = 'all'; render(); });
 org.addEventListener('change', render);
 department.addEventListener('change', render);
 route.addEventListener('change', render);
+narrowLayout.addEventListener('change', placeDetail);
 document.getElementById('clear-filters').addEventListener('click', () => {
   search.value = '';
   org.value = 'all';
