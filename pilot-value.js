@@ -3,11 +3,16 @@
 const params = new URLSearchParams(location.search);
 const byId = (id) => document.getElementById(id);
 const fields = ["volume", "baseline", "assisted", "realization", "hourly", "operating", "api-cost", "implementation"];
+const evidenceFields = ["quality-metric", "quality-baseline", "quality-pilot", "quality-threshold", "quality-notes"];
 const example = { volume: 250, baseline: 20, assisted: 14, realization: 50, hourly: 60, operating: 400, "api-cost": 0, implementation: 10000 };
 const currency = (number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(number);
 const number = (value, places = 0) => new Intl.NumberFormat("en-US", { maximumFractionDigits: places }).format(value);
 const html = (id, value) => { byId(id).textContent = value; };
 const selectedId = params.get("case");
+const importedCost = Number(params.get("apiMonthly"));
+let pendingImport = params.has("apiMonthly") && Number.isFinite(importedCost) && importedCost >= 0 && importedCost <= 100000000 ? { cost: importedCost, model: params.get("model") } : null;
+let activeKey = null;
+let currentApiModel = null;
 
 for (const item of useCases) {
   const option = document.createElement("option");
@@ -17,15 +22,52 @@ for (const item of useCases) {
 }
 if (useCases.some((item) => item.id === selectedId)) byId("case-select").value = selectedId;
 
-const importedCost = Number(params.get("apiMonthly"));
-if (params.has("apiMonthly") && Number.isFinite(importedCost) && importedCost >= 0 && importedCost <= 100000000) {
-  byId("api-cost").value = importedCost.toFixed(2);
-  const model = params.get("model");
-  html("api-note", `Imported direct API token estimate${model && /^[a-z0-9 .-]{1,40}$/i.test(model) ? ` (${model})` : ""}. Verify rates and add integration, hosting, support, and review costs separately.`);
+function updateApiNote() {
+  html("api-note", currentApiModel ? `Imported direct API token estimate (${currentApiModel}). Verify rates and add integration, hosting, support, and review costs separately.` : "Enter direct API token cost only for an API implementation. Include plan, hosting, support, and review costs in the other recurring field.");
+}
+
+function loadScenario(key) {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(key) || "null"); } catch { /* Local storage can be unavailable. */ }
+  for (const id of fields) {
+    const field = byId(id);
+    field.value = String(example[id]);
+    const candidate = saved?.values?.[id];
+    if (typeof candidate === "number" && Number.isFinite(candidate)) {
+      field.value = String(candidate);
+      if (!field.validity.valid) field.value = String(example[id]);
+    }
+  }
+  for (const id of evidenceFields) byId(id).value = typeof saved?.evidence?.[id] === "string" ? saved.evidence[id].slice(0, byId(id).maxLength) : "";
+  currentApiModel = typeof saved?.apiModel === "string" && /^[a-z0-9 .-]{1,40}$/i.test(saved.apiModel) ? saved.apiModel : null;
+  if (pendingImport) {
+    byId("api-cost").value = pendingImport.cost.toFixed(2);
+    currentApiModel = pendingImport.model && /^[a-z0-9 .-]{1,40}$/i.test(pendingImport.model) ? pendingImport.model : null;
+    pendingImport = null;
+    const clean = new URL(location.href);
+    clean.searchParams.delete("apiMonthly");
+    clean.searchParams.delete("model");
+    history.replaceState(null, "", clean);
+  }
+  updateApiNote();
+}
+
+function saveScenario() {
+  if (!readValues()) return;
+  const values = Object.fromEntries(fields.map((id) => [id, Number(byId(id).value)]));
+  const evidence = Object.fromEntries(evidenceFields.map((id) => [id, byId(id).value]));
+  try {
+    localStorage.setItem(activeKey, JSON.stringify({ values, evidence, apiModel: currentApiModel }));
+    html("save-status", "Saved in this browser for this use case. Use aggregate measures; avoid protected case details.");
+  } catch {
+    html("save-status", "Local saving is unavailable in this browser. Keep a separate copy of your pilot notes.");
+  }
 }
 
 function showCase() {
   const item = useCases.find((entry) => entry.id === byId("case-select").value);
+  const key = "claudeforgov-pilot-v1:" + (item?.id || "general");
+  if (activeKey !== key) { activeKey = key; loadScenario(key); }
   html("context-title", item ? item.title : "Illustrative general workflow");
   html("context-summary", item ? item.summary : "Select a workflow from the explorer or pick one here. The example inputs remain unchanged until you measure this workflow.");
   showRoute(item);
@@ -42,6 +84,8 @@ function showCase() {
   if (item) pageUrl.searchParams.set("case", item.id);
   else pageUrl.searchParams.delete("case");
   history.replaceState(null, "", pageUrl);
+  render();
+  saveScenario();
 }
 
 function showRoute(item) {
@@ -95,8 +139,18 @@ function render() {
 }
 
 byId("case-select").addEventListener("change", showCase);
-byId("pilot-form").addEventListener("input", render);
+byId("pilot-form").addEventListener("input", (event) => {
+  if (event.target.id === "api-cost") { currentApiModel = null; updateApiNote(); }
+  render();
+  saveScenario();
+});
 byId("pilot-form").addEventListener("submit", (event) => event.preventDefault());
-byId("reset-example").addEventListener("click", () => { for (const [id, value] of Object.entries(example)) byId(id).value = value; render(); });
+for (const id of evidenceFields) byId(id).addEventListener("input", saveScenario);
+byId("reset-example").addEventListener("click", () => {
+  for (const [id, value] of Object.entries(example)) byId(id).value = value;
+  currentApiModel = null;
+  updateApiNote();
+  render();
+  saveScenario();
+});
 showCase();
-render();

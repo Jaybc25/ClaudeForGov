@@ -14,6 +14,20 @@ const $ = (selector) => document.querySelector(selector);
 const dollars = (value) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: value < 0.01 && value > 0 ? 4 : 2 }).format(value);
 const tokens = (value) => new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }).format(value / 1000000) + "M";
 let selected = "sonnet";
+const defaults = { input: 2500, output: 600, requests: 5000 };
+const caseId = new URLSearchParams(location.search).get("case");
+const storageKey = "claudeforgov-api-v1:" + (caseId && /^[a-z0-9-]{1,80}$/.test(caseId) ? caseId : "general");
+
+try {
+  const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
+  if (MODELS.some((item) => item.id === saved?.model)) selected = saved.model;
+  for (const [id, value] of [["input-tokens", saved?.input], ["output-tokens", saved?.output], ["requests-month", saved?.requests]]) {
+    if (Number.isSafeInteger(value)) {
+      $("#" + id).value = String(value);
+      if (!$("#" + id).validity.valid) $("#" + id).value = String(id === "input-tokens" ? defaults.input : id === "output-tokens" ? defaults.output : defaults.requests);
+    }
+  }
+} catch { /* The estimate still works if browser storage is unavailable. */ }
 
 function readWorkload() {
   const inputs = [$("#input-tokens"), $("#output-tokens"), $("#requests-month")];
@@ -37,6 +51,7 @@ function renderModels() {
     selected = button.dataset.model;
     renderModels();
     renderEstimate();
+    $("#model-grid [data-model='" + selected + "']").focus({ preventScroll: true });
   }));
 }
 
@@ -61,15 +76,23 @@ function renderEstimate() {
   $("#output-charge").textContent = dollars(result.outputCharge);
   $("#annual-total").textContent = dollars(result.total * 12);
   const next = new URL("pilot-value.html", location.href);
-  const caseId = new URLSearchParams(location.search).get("case");
   if (caseId && /^[a-z0-9-]{1,80}$/.test(caseId)) next.searchParams.set("case", caseId);
   next.searchParams.set("apiMonthly", result.total.toFixed(2));
   next.searchParams.set("model", model.name);
   $("#pilot-next").href = next;
   $("#comparison-body").innerHTML = MODELS.map((item) => `<tr${item.id === selected ? ' class="is-selected"' : ""}><th scope="row">${item.name}${item.id === selected ? " <span class=\"row-selected\">Selected</span>" : ""}</th><td>$${item.input}</td><td>$${item.output}</td><td>${dollars(cost(item, workload).total)}</td></tr>`).join("");
+  try { localStorage.setItem(storageKey, JSON.stringify({ model: selected, input: workload.input, output: workload.output, requests: workload.requests })); } catch { /* Local storage is optional. */ }
 }
 
 $("#estimate-form").addEventListener("input", renderEstimate);
 $("#estimate-form").addEventListener("submit", (event) => event.preventDefault());
+$("#reset-estimate").addEventListener("click", () => {
+  selected = "sonnet";
+  $("#input-tokens").value = defaults.input;
+  $("#output-tokens").value = defaults.output;
+  $("#requests-month").value = defaults.requests;
+  renderModels();
+  renderEstimate();
+});
 renderModels();
 renderEstimate();
