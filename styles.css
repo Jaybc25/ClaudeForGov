@@ -20,3 +20,6 @@
 .eyebrow,.route-card-index{color:#8f4a32}
 .site-header nav a{display:inline-flex;align-items:center;min-height:30px}
 .catalog-view button span{opacity:1;color:#554e46}
+.recommendation-next{display:inline-flex;align-items:center;justify-content:space-between;gap:16px;margin-top:23px;padding:13px 16px;border-radius:5px;background:#e89a76;color:#282521;font-size:13px;font-weight:700}
+.recommendation-next:hover{background:#f3b28e}
+@media(max-width:680px){.recommendation{min-height:0;scroll-margin-top:16px}.recommendation h3{margin-top:22px}.recommendation-next{width:100%}}
