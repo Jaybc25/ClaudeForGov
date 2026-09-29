@@ -25,6 +25,21 @@ const scenarios = {
   }
 };
 
+const routeForScenario = { policy: 'Chat', casework: 'Cowork', software: 'Code', resident: 'API' };
+const scenarioList = document.querySelector('.scenario-list');
+const recommendation = document.querySelector('.recommendation');
+const exploreLayout = document.querySelector('.explore-layout');
+const mobileLayout = window.matchMedia('(max-width: 680px)');
+let activeScenario = 'policy';
+
+function placeRecommendation() {
+  if (mobileLayout.matches) {
+    scenarioList.querySelector(`[data-scenario="${activeScenario}"]`).after(recommendation);
+  } else {
+    exploreLayout.append(recommendation);
+  }
+}
+
 const fields = {
   index: document.getElementById('result-index'),
   title: document.getElementById('route-title'),
@@ -37,11 +52,18 @@ document.querySelectorAll('[data-scenario]').forEach((button) => {
   button.addEventListener('click', () => {
     const choice = scenarios[button.dataset.scenario];
     if (!choice) return;
+    activeScenario = button.dataset.scenario;
     document.querySelectorAll('[data-scenario]').forEach((item) => {
       const selected = item === button;
       item.classList.toggle('is-active', selected);
       item.setAttribute('aria-pressed', String(selected));
     });
     for (const [key, node] of Object.entries(fields)) node.textContent = choice[key];
+    document.getElementById('route-next').href = 'use-cases.html?route=' + routeForScenario[activeScenario];
+    placeRecommendation();
+    if (mobileLayout.matches) recommendation.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
+
+mobileLayout.addEventListener('change', placeRecommendation);
+placeRecommendation();
