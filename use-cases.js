@@ -5,7 +5,8 @@ const org = document.getElementById('org-filter');
 const department = document.getElementById('department-filter');
 const route = document.getElementById('route-filter');
 const count = document.getElementById('result-count');
-let selected = new URLSearchParams(location.search).get('case');
+const initialParams = new URLSearchParams(location.search);
+let selected = initialParams.get('case');
 
 function element(tag, className, value) {
   const node = document.createElement(tag);
@@ -24,12 +25,24 @@ function addOptions(select, options) {
 }
 addOptions(org, organizations);
 addOptions(department, departments);
+if (organizations[initialParams.get('org')]) org.value = initialParams.get('org');
+if (departments[initialParams.get('department')]) department.value = initialParams.get('department');
+if (['Chat', 'Cowork', 'Code', 'API'].includes(initialParams.get('route'))) route.value = initialParams.get('route');
+
+function syncUrl(item) {
+  const url = new URL(location.href);
+  for (const [key, value] of [['org', org.value], ['department', department.value], ['route', route.value]]) {
+    if (value === 'all') url.searchParams.delete(key);
+    else url.searchParams.set(key, value);
+  }
+  if (item) url.searchParams.set('case', item.id);
+  else url.searchParams.delete('case');
+  history.replaceState(null, '', url);
+}
 
 function setDetail(item) {
   selected = item.id;
-  const url = new URL(location.href);
-  url.searchParams.set('case', item.id);
-  history.replaceState(null, '', url);
+  syncUrl(item);
   detail.replaceChildren();
   detail.append(element('p', 'detail-kicker', departments[item.department] + ' / ' + item.orgs.map(key => organizations[key]).join(' · ')));
   detail.append(element('h2', '', item.title));
@@ -64,6 +77,7 @@ function render() {
     empty.append(element('span', '', 'Try another combination or clear the filters.'));
     grid.append(empty);
     detail.replaceChildren(element('p', 'detail-kicker', 'No matching use case'), element('h2', '', 'Try another search'));
+    syncUrl(null);
     return;
   }
   for (const item of matches) {
