@@ -64,6 +64,9 @@ function setDetail(item) {
     detail.append(section);
   }
   detail.append(element('p', 'detail-disclaimer', 'This route is a planning hypothesis. Confirm product access, commercial terms, data handling, and agency policy before use.'));
+  const pilotLink = element('a', 'detail-pilot-link', 'Build a pilot value case ↗');
+  pilotLink.href = 'pilot-value.html?case=' + encodeURIComponent(item.id);
+  detail.append(pilotLink);
   grid.querySelectorAll('button[data-id]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.id === selected)));
 }
 

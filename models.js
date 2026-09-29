@@ -50,6 +50,7 @@ function renderEstimate() {
   if (!workload) {
     ["#monthly-total", "#input-month", "#input-charge", "#output-month", "#output-charge", "#annual-total"].forEach((id) => $(id).textContent = "—");
     $("#comparison-body").replaceChildren();
+    $("#pilot-next").href = "pilot-value.html";
     return;
   }
   const result = cost(model, workload);
@@ -59,6 +60,12 @@ function renderEstimate() {
   $("#output-month").textContent = tokens(result.monthlyOutput);
   $("#output-charge").textContent = dollars(result.outputCharge);
   $("#annual-total").textContent = dollars(result.total * 12);
+  const next = new URL("pilot-value.html", location.href);
+  const caseId = new URLSearchParams(location.search).get("case");
+  if (caseId && /^[a-z0-9-]{1,80}$/.test(caseId)) next.searchParams.set("case", caseId);
+  next.searchParams.set("apiMonthly", result.total.toFixed(2));
+  next.searchParams.set("model", model.name);
+  $("#pilot-next").href = next;
   $("#comparison-body").innerHTML = MODELS.map((item) => `<tr${item.id === selected ? ' class="is-selected"' : ""}><th scope="row">${item.name}${item.id === selected ? " <span class=\"row-selected\">Selected</span>" : ""}</th><td>$${item.input}</td><td>$${item.output}</td><td>${dollars(cost(item, workload).total)}</td></tr>`).join("");
 }
 
