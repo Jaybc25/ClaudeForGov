@@ -4,3 +4,7 @@
 @media(prefers-reduced-motion:reduce){.model-card{transition:none}}
 .pilot-next{display:inline-flex;gap:30px;align-items:center;background:#292521;color:#fff;padding:16px 20px;border-radius:5px;margin-top:25px;font-size:13px;font-weight:700}.pilot-next:hover{background:#a65b41}.pilot-next span{font-size:18px}
 .reset-estimate{align-self:flex-start;background:transparent;border:0;color:#9d543c;text-decoration:underline;text-underline-offset:3px;font-size:11px;font-weight:700;padding:0;margin-top:15px}
+.model-limit-note{margin:12px 0;padding:10px 12px;border:1px solid #e7b08a;border-radius:5px;background:#493029;color:#fff;font-size:12px;line-height:1.5}
+.pilot-next[aria-disabled="true"]{opacity:.55;cursor:not-allowed;text-decoration:none}
+.comparison-scroll:focus-visible{outline:3px solid #8f4a32;outline-offset:3px}
+.estimate-total{overflow-wrap:anywhere}

@@ -4,7 +4,7 @@ Working editorial decision, September 29, 2026. This reviews the user-supplied P
 
 ## Decision
 
-Keep a broad, searchable catalog, but lead with **16 featured pilot candidates**. Do not turn every source bullet into a card. A case earns its own record when it has a distinct user, source system or artifact, review point, success measure, or deployment risk. Organization and department are tags; Chat, Cowork, Code, and API are delivery routes, and several workflows can have a primary route plus a credible alternative. A product route is never itself an approval for an agency or data class.
+Keep a broad, searchable catalog, but lead with **16 featured pilot candidates**. Do not turn every source bullet into a card. A case earns its own record when it has a distinct user, source system or artifact, review point, success measure, or deployment risk. Organization and department are tags; Chat, Claude tasks (Cowork capability), Code, and API are delivery routes, and several workflows can have a primary route plus a credible alternative. A product route is never itself an approval for an agency or data class.
 
 Prioritization favors: clear public or staff value; a bounded, measurable pilot; source-grounded outputs; broad applicability or a compelling special-district example; a concrete Claude route; and human review that can be demonstrated. It penalizes unsupported savings claims, unclear ownership, sensitive data dependencies, and high-stakes decisions. The ordering below is editorial judgment, not a measured effectiveness ranking.
 
@@ -72,6 +72,6 @@ The featured set covers all four routes and multiple departments without implyin
 Anthropic describes government opportunities in citizen services, document review/preparation, and policymaking; this supports the broad domains, not this specific ranking. Its Cowork description emphasizes work across selected folders and tools delivered for review, and its connector guidance says connected access inherits user permissions. These do not establish government approval for a given workflow or data type. Product access, commercial terms, security, legal requirements, and procurement must be checked for the actual agency deployment.
 
 - [Anthropic: Expanding Access to Claude for Government](https://www.anthropic.com/news/expanding-access-to-claude-for-government)
-- [Anthropic: Claude Cowork](https://www.anthropic.com/product/claude-cowork)
+- [Anthropic: Claude Cowork](https://claude.com/product/cowork)
 - [Anthropic: Connectors](https://support.anthropic.com/en/articles/11176164-pre-built-web-connectors-using-remote-mcp)
 - [Anthropic: Claude Code for State and Local Governments](https://www.anthropic.com/webinars/claude-code-and-public-service-modernizing-how-state-and-local-governments-build-software)

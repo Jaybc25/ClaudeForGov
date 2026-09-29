@@ -29,8 +29,8 @@ function addOptions(select, options) {
 }
 addOptions(org, organizations);
 addOptions(department, departments);
-if (organizations[initialParams.get('org')]) org.value = initialParams.get('org');
-if (departments[initialParams.get('department')]) department.value = initialParams.get('department');
+if (Object.hasOwn(organizations, initialParams.get('org'))) org.value = initialParams.get('org');
+if (Object.hasOwn(departments, initialParams.get('department'))) department.value = initialParams.get('department');
 if (['Chat', 'Cowork', 'Code', 'API'].includes(initialParams.get('route'))) route.value = initialParams.get('route');
 
 function syncUrl(item) {
@@ -55,7 +55,7 @@ function setDetail(item) {
   detail.append(element('p', '', item.summary));
   const box = element('div', 'detail-route');
   box.append(element('span', '', 'Suggested starting route'));
-  box.append(element('strong', '', 'Claude ' + item.route));
+  box.append(element('strong', '', (item.route === 'Cowork' ? 'Claude tasks (Cowork)' : 'Claude ' + item.route)));
   detail.append(box);
   for (const [title, value] of [['Pilot to test', item.pilot], ['Measure', item.measure], ['Validate before deployment', item.validate]]) {
     const section = element('div', 'detail-section');
@@ -106,10 +106,10 @@ function render() {
     card.setAttribute('aria-pressed', String(item.id === selected));
     const top = element('div', 'case-card-top');
     top.append(element('span', '', departments[item.department]));
-    top.append(element('span', '', 'Claude ' + item.route));
+    top.append(element('span', '', (item.route === 'Cowork' ? 'Claude tasks (Cowork)' : 'Claude ' + item.route)));
     card.append(top);
-    card.append(element('h3', '', item.title));
-    card.append(element('p', '', item.summary));
+    card.append(element('span', 'case-card-title', item.title));
+    card.append(element('span', 'case-card-summary', item.summary));
     card.append(element('span', 'case-card-bottom', 'View pilot and validation questions ↗'));
     card.addEventListener('click', () => {
       setDetail(item);

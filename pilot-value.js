@@ -4,7 +4,16 @@ const params = new URLSearchParams(location.search);
 const byId = (id) => document.getElementById(id);
 const fields = ["volume", "baseline", "assisted", "realization", "hourly", "operating", "api-cost", "implementation"];
 const evidenceFields = ["quality-metric", "quality-baseline", "quality-pilot", "quality-threshold", "quality-notes"];
+const modelNames = new Set(["Claude Haiku 4.5", "Claude Sonnet 5.5", "Claude Opus 5.5", "Claude Fable 5.1"]);
 const example = { volume: 250, baseline: 20, assisted: 14, realization: 50, hourly: 60, operating: 400, "api-cost": 0, implementation: 10000 };
+for (const id of fields) {
+  const field = document.getElementById(id);
+  const message = document.createElement("span");
+  message.id = id + "-error";
+  message.className = "field-error";
+  field.setAttribute("aria-describedby", message.id);
+  field.closest("label").append(message);
+}
 const currency = (number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(number);
 const number = (value, places = 0) => new Intl.NumberFormat("en-US", { maximumFractionDigits: places }).format(value);
 const html = (id, value) => { byId(id).textContent = value; };
@@ -23,7 +32,7 @@ for (const item of useCases) {
 if (useCases.some((item) => item.id === selectedId)) byId("case-select").value = selectedId;
 
 function updateApiNote() {
-  html("api-note", currentApiModel ? `Imported direct API token estimate (${currentApiModel}). Verify rates and add integration, hosting, support, and review costs separately.` : "Enter direct API token cost only for an API implementation. Include plan, hosting, support, and review costs in the other recurring field.");
+  html("api-note", currentApiModel ? `Imported direct API token estimate (${currentApiModel}). Verify rates; include integration, hosting, support, and evaluation tooling costs separately. Staff review time belongs in assisted minutes.` : "Enter direct API token cost only for an API implementation. Include plan, hosting, support, and evaluation tooling in the other recurring field; staff review time belongs in assisted minutes.");
 }
 
 function loadScenario(key) {
@@ -39,10 +48,10 @@ function loadScenario(key) {
     }
   }
   for (const id of evidenceFields) byId(id).value = typeof saved?.evidence?.[id] === "string" ? saved.evidence[id].slice(0, byId(id).maxLength) : "";
-  currentApiModel = typeof saved?.apiModel === "string" && /^[a-z0-9 .-]{1,40}$/i.test(saved.apiModel) ? saved.apiModel : null;
+  currentApiModel = modelNames.has(saved?.apiModel) ? saved.apiModel : null;
   if (pendingImport) {
     byId("api-cost").value = pendingImport.cost.toFixed(2);
-    currentApiModel = pendingImport.model && /^[a-z0-9 .-]{1,40}$/i.test(pendingImport.model) ? pendingImport.model : null;
+    currentApiModel = modelNames.has(pendingImport.model) ? pendingImport.model : null;
     pendingImport = null;
     const clean = new URL(location.href);
     clean.searchParams.delete("apiMonthly");
@@ -53,12 +62,14 @@ function loadScenario(key) {
 }
 
 function saveScenario() {
-  if (!readValues()) return;
-  const values = Object.fromEntries(fields.map((id) => [id, Number(byId(id).value)]));
+  const validValues = readValues();
+  let previous = null;
+  try { previous = JSON.parse(localStorage.getItem(activeKey) || "null"); } catch { /* Use illustrative values if unavailable. */ }
+  const values = validValues || previous?.values || example;
   const evidence = Object.fromEntries(evidenceFields.map((id) => [id, byId(id).value]));
   try {
     localStorage.setItem(activeKey, JSON.stringify({ values, evidence, apiModel: currentApiModel }));
-    html("save-status", "Saved in this browser for this use case. Use aggregate measures; avoid protected case details.");
+    html("save-status", validValues ? "Saved in this browser for this use case. Use aggregate measures; avoid protected case details." : "Notes saved in this browser. Correct the highlighted numeric fields to save new assumptions; the last valid values will return on refresh.");
   } catch {
     html("save-status", "Local saving is unavailable in this browser. Keep a separate copy of your pilot notes.");
   }
@@ -90,7 +101,8 @@ function showCase() {
 
 function showRoute(item) {
   const alternate = item && item.route !== "API" && Number(byId("api-cost").value) > 0;
-  html("context-route", item ? `Suggested starting route: Claude ${item.route}${alternate ? ". An API token cost is entered, so this estimate assumes an alternate API implementation." : ""}` : "No route selected");
+  html("context-route", item ? `Suggested starting route: ${item.route === "Cowork" ? "Claude tasks (Cowork capability)" : `Claude ${item.route}`}${alternate ? ". An API token cost is entered, so this estimate assumes an alternate API implementation." : ""}` : "No route selected");
+  byId("alternate-note").hidden = !alternate;
 }
 
 function readValues() {
@@ -119,6 +131,14 @@ function calculate(value) {
 function render() {
   const value = readValues();
   showRoute(useCases.find((entry) => entry.id === byId("case-select").value));
+  for (const id of fields) {
+    const field = byId(id);
+    const invalid = !field.validity.valid || field.value.trim() === "";
+    field.setAttribute("aria-invalid", String(invalid));
+    const label = field.closest("label")?.childNodes[0]?.textContent?.trim() || id;
+    const limit = field.max ? ` (maximum ${Number(field.max).toLocaleString()})` : "";
+    html(id + "-error", invalid ? `${label}: enter a value from 0${limit}${field.step && field.step !== "1" ? ` in increments of ${field.step}` : " as a whole number"}.` : "");
+  }
   byId("form-error").hidden = Boolean(value);
   html("form-error", value ? "" : "Enter nonnegative values within each field’s limits. The realization factor must be between 0% and 100%.");
   if (!value) {
@@ -127,14 +147,15 @@ function render() {
   }
   const result = calculate(value);
   html("net-value", currency(result.threeYearNet));
-  html("net-qualifier", result.threeYearNet < 0 ? "Negative modeled net capacity value after costs" : "Capacity value proxy after modeled costs, not cash savings");
+  html("net-qualifier", (result.threeYearNet < 0 ? "Negative modeled net capacity value after costs" : "Capacity value proxy after modeled costs, not cash savings") + (byId("alternate-note").hidden ? "" : ". Modeled as an API implementation."));
   byId("net-value").classList.toggle("negative", result.threeYearNet < 0);
   html("hours", `${number(result.annualCapacityHours, 1)} hours`);
   html("annual-value", currency(result.annualCapacityValue));
   html("annual-cost", currency(result.annualRecurringCost));
   html("initial-cost", currency(value.implementation));
-  html("roi", result.roi === null ? "N/A (no modeled cost)" : `${number(result.roi)}%`);
-  html("payback", result.payback === null ? "No payback" : result.payback === 0 ? "Immediate*" : `${number(Math.ceil(result.payback))} months`);
+  html("roi", result.roi === null ? "N/A (no modeled cost)" : `${Math.round(result.roi) === 0 ? "0" : number(result.roi)}%`);
+  const paybackMonths = result.payback === null ? null : Math.ceil(Number(result.payback.toFixed(9)));
+  html("payback", paybackMonths === null ? "No payback" : paybackMonths === 0 ? "Immediate*" : `${number(paybackMonths)} ${paybackMonths === 1 ? "month" : "months"}`);
   html("math-summary", `(${number(value.baseline, 1)} − ${number(value.assisted, 1)}) minutes × ${number(value.volume)} units/month ÷ 60 × 12${value.baseline >= value.assisted ? ` × ${number(value.realization)}% realization` : " (full time penalty)"} = ${number(result.annualCapacityHours, 1)} annual capacity hours. At ${currency(value.hourly)}/hour, that is ${currency(result.annualCapacityValue)} annual capacity value. Three-year net = 3 × annual capacity value − 3 × ${currency(result.annualRecurringCost)} recurring cost − ${currency(value.implementation)} implementation. ${result.payback === 0 ? "*No implementation cost; recurring costs are still included." : ""}`);
 }
 
@@ -146,6 +167,10 @@ byId("pilot-form").addEventListener("input", (event) => {
 });
 byId("pilot-form").addEventListener("submit", (event) => event.preventDefault());
 for (const id of evidenceFields) byId(id).addEventListener("input", saveScenario);
+byId("clear-notes").addEventListener("click", () => {
+  for (const id of evidenceFields) byId(id).value = "";
+  saveScenario();
+});
 byId("reset-example").addEventListener("click", () => {
   for (const [id, value] of Object.entries(example)) byId(id).value = value;
   currentApiModel = null;

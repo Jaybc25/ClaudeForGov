@@ -6,7 +6,7 @@ const scenarios = {
     check: 'Confirm access controls, permitted data, source review, and human approval for consequential responses.'
   },
   casework: {
-    index: '02 / 04', symbol: '◈', title: 'Claude Cowork',
+    index: '02 / 04', symbol: '◈', title: 'Claude tasks (Cowork capability)',
     purpose: 'For teams preparing repeatable deliverables from files and instructions, with a person reviewing every result.',
     pilot: 'Choose one bounded, low-risk document workflow and measure preparation and review time.',
     check: 'Confirm file permissions, connected tools, sensitive data handling, and a clear approval step.'
