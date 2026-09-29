@@ -6,3 +6,4 @@
 .detail-pilot-link{display:inline-flex;margin-top:21px;padding:13px 16px;border-radius:5px;background:#e89a76;color:#282521;font-size:12px;font-weight:700}.detail-pilot-link:hover{background:#f3b28e}
 .case-card-title{display:block;font:500 27px/1.08 Newsreader,Georgia,serif;letter-spacing:-.035em;margin:22px 0 12px;color:#292521}
 .case-card-summary{display:block;font-size:13px;line-height:1.5;color:#6d645b}
+@media(max-width:950px){.case-grid>.case-detail{grid-column:1/-1;scroll-margin-top:16px}}
