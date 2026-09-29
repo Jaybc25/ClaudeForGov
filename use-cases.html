@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#faf9f5" />
+    <meta name="description" content="Explore government workflows where Claude may help, with suggested product routes, pilot measures, and deployment questions." />
+    <title>Government Use Cases | ClaudeForGov</title>
+    <link rel="icon" href="assets/claudeforgov-jayai-logo-clay.png" type="image/png" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="use-cases.css" />
+    <script src="use-cases.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header"><div class="header-inner"><a class="brand" href="index.html" aria-label="ClaudeForGov home"><img src="assets/claudeforgov-jayai-logo-clay.png" alt="" width="48" height="48" /><span>Claude<span class="brand-accent">ForGov</span></span></a><nav aria-label="Main navigation"><a href="use-cases.html" aria-current="page">Explore use cases</a><a href="index.html#routes">Claude routes</a><a href="index.html#approach">Our approach</a></nav></div></header>
+    <main id="main" class="catalog wrap">
+      <div class="catalog-intro"><p class="eyebrow">Use case explorer / early catalog</p><h1>Find a useful starting point for your mission.</h1><p>Explore representative workflows, then examine the suggested Claude route, a measurable pilot, and questions to resolve before deployment. These are planning examples, not claims that a product is approved for a specific agency or data type.</p></div>
+      <div class="catalog-controls" aria-label="Filter use cases"><label class="search-label" for="case-search">Search workflows<input id="case-search" type="search" placeholder="Search by task or outcome" autocomplete="off" /></label><label for="sector-filter">Organization<select id="sector-filter"><option value="all">All organizations</option><option value="state-local">State & local</option><option value="federal">Federal</option><option value="education">Education</option></select></label><label for="route-filter">Claude route<select id="route-filter"><option value="all">All routes</option><option value="Chat">Chat</option><option value="Cowork">Cowork</option><option value="Code">Code</option><option value="API">API</option></select></label></div>
+      <div class="catalog-summary"><span id="result-count" role="status" aria-live="polite">16 use cases</span><button id="clear-filters" type="button">Clear filters</button></div>
+      <div class="catalog-layout"><div class="case-grid" id="case-grid" aria-label="Use cases"></div><aside class="case-detail" id="case-detail" aria-live="polite" aria-atomic="true"><p class="detail-kicker">Select a use case</p><h2>Explore a workflow</h2><p>Choose a card to inspect its likely route, pilot measure, and deployment questions.</p></aside></div>
+      <div class="catalog-method"><strong>How this catalog was made</strong><p>These examples are written for ClaudeForGov from common public sector work patterns. Some problem areas were informed by the separate JayAI use case inventory, but NVIDIA-specific blueprints, descriptions, product links, and infrastructure recommendations were not carried over. Route suggestions are hypotheses to test in discovery.</p></div>
+    </main>
+    <footer class="site-footer"><div class="wrap footer-inner"><div><strong>ClaudeForGov</strong><p>An independent JayAI project for exploring responsible public sector AI decisions.</p></div><p>Not affiliated with or endorsed by Anthropic. Product fit, pricing, security, and procurement requirements must be verified for each deployment.</p></div></footer>
+  </body>
+</html>
