@@ -8,6 +8,8 @@ An independent JayAI project exploring where Claude could help government teams 
 - The [Use Case Explorer](https://claude-for-gov.vercel.app/use-cases.html) has 52 illustrative workflows. Visitors can search and filter by organization type, department or function, and suggested Claude route. Each case includes a bounded pilot, proposed measures, and deployment questions.
 - The catalog uses one record per workflow, tagged for multiple relevant organizations. Its organization types are practical browsing categories, not a legal classification of a particular entity. Department labels are broad functions; agency structures vary.
 
+The [use case prioritization review](USE_CASE_PRIORITIZATION.md) compares additional user-supplied ideas with the live catalog and proposes 16 featured pilot candidates. It is an editorial review; the proposed cards and Featured control are not yet live.
+
 The explorer is a working planning catalog. Route assignments and organization fit are hypotheses for discovery, not evidence of agency adoption, product eligibility, security authorization, or measured results. Some problem areas were informed by JayAI's separate inventory, but NVIDIA-specific descriptions, blueprint implementation details, product links, and infrastructure recommendations were not copied.
 
 ## Planned experience
