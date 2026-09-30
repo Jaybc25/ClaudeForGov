@@ -4,7 +4,7 @@ Working editorial decision, September 29, 2026. This reviews the user-supplied P
 
 ## Decision
 
-Keep a broad, searchable catalog, but lead with **16 featured pilot candidates**. Do not turn every source bullet into a card. A case earns its own record when it has a distinct user, source system or artifact, review point, success measure, or deployment risk. Organization and department are tags; Chat, Claude tasks (Cowork capability), Code, and API are delivery routes, and several workflows can have a primary route plus a credible alternative. A product route is never itself an approval for an agency or data class.
+At the time of this review, the catalog led with **16 featured pilot candidates**; the current shortlist has 18. Do not turn every source bullet into a card. A case earns its own record when it has a distinct user, source system or artifact, review point, success measure, or deployment risk. Organization and department are tags; Chat, Claude tasks (Cowork capability), Code, and API are delivery routes, and several workflows can have a primary route plus a credible alternative. A product route is never itself an approval for an agency or data class.
 
 Prioritization favors: clear public or staff value; a bounded, measurable pilot; source-grounded outputs; broad applicability or a compelling special-district example; a concrete Claude route; and human review that can be demonstrated. It penalizes unsupported savings claims, unclear ownership, sensitive data dependencies, and high-stakes decisions. The ordering below is editorial judgment, not a measured effectiveness ranking.
 
@@ -61,8 +61,19 @@ The featured set covers all four routes and multiple departments without implyin
 
 ## Catalog changes and next work
 
-1. **Implemented:** Five distinct cards: solicitation authoring, budget variance reporting, permit completeness, contact-center agent assist, and asset/maintenance synthesis. The catalog now has 57 cases. Consider grant opportunity matching after source-feed design.
-2. **Implemented:** A 16-case editorial shortlist and a visible Featured / All catalog control. The full searchable basket remains available.
+### September 30 evidence review
+
+Three additional workflows met the distinct-user-and-pilot test: `caseworker-verification` (staff verify case materials with policy citations), `teacher-planning` (teachers adapt approved curriculum), and `cyber-analyst-assist` (analysts review incident evidence). The first two joined Featured, which now has 18; the full catalog has 60. Maryland's caseworker partnership and Anthropic's teacher offering are concrete product-context examples, not proof of measured outcomes for these proposed pilots. The cybersecurity case starts with a closed exercise and sanitized evidence. The existing `legacy-apps` record now names legacy dependency mapping and COBOL where relevant, without cloning a near-duplicate case. See the [current catalog map](USE_CASE_CATALOG.md).
+
+Security authorization paperwork, records disposition, and AI-governance drafting remain research or guidance topics. A small keyword count in a federal inventory is not a demand estimate: the inventory separately consolidates some commercial-tool use and excludes some research use. Similar public-information API cases remain separate because source freshness, escalation, and success measures vary by service. Research synthesis for public labs and universities remains a scope question.
+
+- [Anthropic: Maryland partnership](https://www.anthropic.com/news/maryland-partnership)
+- [Anthropic: Claude for Teachers](https://www.anthropic.com/news/claude-for-teachers)
+- [CISA: Federal incident and vulnerability response playbooks](https://www.cisa.gov/topics/cybersecurity-best-practices/executive-order-improving-nations-cybersecurity)
+- [OMB: 2025 Federal AI Use Case Inventory](https://github.com/ombegov/2025-Federal-Agency-AI-Use-Case-Inventory)
+
+1. **Implemented:** Five distinct cards: solicitation authoring, budget variance reporting, permit completeness, contact-center agent assist, and asset/maintenance synthesis. The catalog had 57 cases at this review; it has since expanded to 60. Consider grant opportunity matching after source-feed design.
+2. **Implemented:** A 16-case editorial shortlist at the time of this review (now 18) and a visible Featured / All catalog control. The full searchable basket remains available.
 3. Support a primary route plus an optional alternative when the same workflow can genuinely be done in staff-directed or embedded form. The detail should explain what changes between routes, including integration and review responsibility.
 4. Add a pilot evidence tier to every featured case: illustrative idea, source-supported pattern, or measured case study. The current site should remain in the first tier until individual evidence is attached.
 5. Keep outcome claims conditional. For example, measure first-contact resolution and answer accuracy alongside contact volume; measure grant reporting timeliness rather than attributing awards to Claude; treat hours returned as capacity until realization is demonstrated.
