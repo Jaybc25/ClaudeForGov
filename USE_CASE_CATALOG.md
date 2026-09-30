@@ -1,6 +1,6 @@
 # ClaudeForGov: 60-use-case catalog and filter map
 
-Current catalog snapshot, September 30, 2026. The source of truth for the live explorer is [`use-cases-data.js`](use-cases-data.js); the actual filtering behavior is in [`use-cases.js`](use-cases.js). This document records the current assignments, which are editorial hypotheses for exploration, not a statement of product availability, agency authorization, or measured results.
+Current catalog snapshot, September 30, 2026. The source of truth for the live explorer is [`use-cases-data.js`](use-cases-data.js); case-specific potential benefits and examples are in [`use-case-insights.js`](use-case-insights.js); the actual filtering behavior is in [`use-cases.js`](use-cases.js). This document records the current assignments, which are editorial hypotheses for exploration, not a statement of product availability, agency authorization, or measured results.
 
 ## How the organizational map works
 
@@ -180,6 +180,7 @@ This catalog includes routine public-safety preparation but excludes automated l
 ## Maintenance and future multi-mapping
 
 - The live site reads `organizations`, `departments`, `useCases`, and `featuredCaseIds` from `use-cases-data.js`. Change that file first, then refresh this snapshot. Do not maintain a second independent source of truth.
+- Each use case ID has a corresponding potential benefit and example in `use-case-insights.js`. Update these together when a workflow changes. This explanatory copy is illustrative; verify its usefulness with agency staff and pilot results.
 - To place one workflow in another organization filter now, add the organization key to that record’s `orgs` array. Keep the same ID; do not clone the workflow. Validate that the example and pilot fit that organization.
 - To place a workflow under **multiple departments or multiple routes**, the current single-valued `department` and `route` fields and explorer predicates must be extended to arrays. A future schema could use `departments: [...]`, `primaryRoute`, and `alternativeRoutes: [{route, conditions}]`; the interface should distinguish primary from alternatives and explain what changes in implementation, controls, and costs. This is a proposal, **not** current functionality.
 - A cross-cutting property such as language access, accessibility, sensitive data, or public-facing/staff-facing should become its own curated tag if readers need to filter on it. Avoid copying nearly identical cards into several branches.

@@ -56,9 +56,22 @@ function setDetail(item) {
   selected = item.id;
   syncUrl(item);
   detail.replaceChildren();
+  detail.scrollTop = 0;
   detail.append(element('p', 'detail-kicker', departments[item.department] + ' / ' + item.orgs.map(key => organizations[key]).join(' · ')));
   detail.append(element('h2', '', item.title));
   detail.append(element('p', '', item.summary));
+  const insight = caseInsights[item.id];
+  if (insight) {
+    const value = element('div', 'detail-value');
+    value.append(element('h3', '', 'Potential value'));
+    value.append(element('p', '', insight[0]));
+    value.append(element('small', '', 'Illustrative benefit to test in a pilot, not a measured outcome.'));
+    detail.append(value);
+    const example = element('details', 'detail-example');
+    example.append(element('summary', '', 'See an example in practice'));
+    example.append(element('p', '', insight[1]));
+    detail.append(example);
+  }
   const box = element('div', 'detail-route');
   box.append(element('span', '', 'Suggested starting route'));
   box.append(element('strong', '', (item.route === 'Cowork' ? 'Claude tasks (Cowork)' : 'Claude ' + item.route)));
@@ -140,7 +153,7 @@ function render() {
     card.append(top);
     card.append(element('span', 'case-card-title', item.title));
     card.append(element('span', 'case-card-summary', item.summary));
-    card.append(element('span', 'case-card-bottom', 'View pilot and validation questions ↗'));
+    card.append(element('span', 'case-card-bottom', 'Explore value, example, and pilot ↗'));
     card.addEventListener('click', () => {
       setDetail(item);
       if (narrowLayout.matches) detail.scrollIntoView({behavior:'smooth', block:'start'});
