@@ -8,3 +8,5 @@
 .pilot-next[aria-disabled="true"]{opacity:.55;cursor:not-allowed;text-decoration:none}
 .comparison-scroll:focus-visible{outline:3px solid #8f4a32;outline-offset:3px}
 .estimate-total{overflow-wrap:anywhere}
+.calculator-jump{margin-left:22px}
+@media(max-width:680px){.calculator-jump{display:inline-block;margin:20px 0 0}.estimate-results{scroll-margin-top:16px}}

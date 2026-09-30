@@ -146,9 +146,9 @@ function render() {
   html("form-error", value ? "" : "Enter nonnegative values within each field’s limits. The realization factor must be between 0% and 100%.");
   if (!value) {
     for (const id of ["net-value", "hours", "annual-value", "annual-cost", "initial-cost", "roi", "payback"]) html(id, "—");
+    updateMobileSummary();
     return;
   }
-  byId("result-example").hidden = !fields.every((id) => value[id] === example[id]);
   const result = calculate(value);
   html("net-value", currency(result.threeYearNet));
   html("net-qualifier", (result.threeYearNet < 0 ? "Negative modeled net capacity value after costs" : "Capacity value proxy after modeled costs, not cash savings") + (byId("alternate-note").hidden ? "" : ". Modeled as an API implementation."));
@@ -161,7 +161,25 @@ function render() {
   const paybackMonths = result.payback === null ? null : Math.ceil(Number(result.payback.toFixed(9)));
   html("payback", paybackMonths === null ? "No payback" : paybackMonths === 0 ? "Immediate*" : `${number(paybackMonths)} ${paybackMonths === 1 ? "month" : "months"}`);
   html("math-summary", `(${number(value.baseline, 2)} − ${number(value.assisted, 2)}) minutes × ${number(value.volume)} units/month ÷ 60 × 12${value.baseline >= value.assisted ? ` × ${number(value.realization, 1)}% realization` : " (full time penalty)"} = ${number(result.annualCapacityHours, 1)} annual capacity hours. At ${new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2 }).format(value.hourly)}/hour, that is ${currency(result.annualCapacityValue)} annual capacity value. Three-year net = 3 × annual capacity value − 3 × ${currency(result.annualRecurringCost)} recurring cost − ${currency(value.implementation)} implementation. ${result.payback === 0 ? "*No implementation cost; recurring costs are still included." : ""}`);
+  updateMobileSummary();
 }
+
+function updateMobileSummary() {
+  const valid = Boolean(readValues());
+  html("pilot-summary-label", valid ? "Illustrative capacity net · 3 yr" : "Check your inputs");
+  html("pilot-summary-net", valid ? byId("net-value").textContent : "—");
+  html("pilot-summary-payback", valid ? byId("payback").textContent : "—");
+  byId("pilot-live-summary").href = valid ? "#pilot-results" : "#pilot-form";
+}
+
+function updateMobileSummaryVisibility() {
+  const section = document.querySelector(".pilot-workbench").getBoundingClientRect();
+  const result = byId("pilot-results").getBoundingClientRect();
+  byId("pilot-live-summary").hidden = !window.matchMedia("(max-width: 680px)").matches || section.top >= innerHeight || section.bottom <= 0 || result.top <= innerHeight * .75;
+}
+
+window.addEventListener("scroll", updateMobileSummaryVisibility, { passive: true });
+window.addEventListener("resize", updateMobileSummaryVisibility);
 
 byId("case-select").addEventListener("change", showCase);
 byId("pilot-form").addEventListener("input", (event) => {
@@ -183,3 +201,4 @@ byId("reset-example").addEventListener("click", () => {
   saveScenario();
 });
 showCase();
+updateMobileSummaryVisibility();

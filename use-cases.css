@@ -7,3 +7,6 @@
 .case-card-title{display:block;font:500 27px/1.08 Newsreader,Georgia,serif;letter-spacing:-.035em;margin:22px 0 12px;color:#292521}
 .case-card-summary{display:block;font-size:13px;line-height:1.5;color:#6d645b}
 @media(max-width:950px){.case-grid>.case-detail{grid-column:1/-1;scroll-margin-top:16px}}
+.filter-toggle,.detail-back{display:none}
+@media(max-width:950px){.detail-back{display:block;margin-top:18px;border:1px solid #d19d82;border-radius:5px;background:transparent;color:#f6d4c1;padding:11px 14px;font-size:13px;font-weight:700}}
+@media(max-width:640px){.filter-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:48px;margin-top:20px;padding:12px 16px;border:1px solid #d8cfc3;border-radius:7px;background:#f1eee8;color:#3d332d;font-size:14px;font-weight:700}.filter-toggle[hidden],.catalog-controls.filters-collapsed{display:none}.catalog-controls{margin-top:8px}.catalog-summary{margin-top:18px}}

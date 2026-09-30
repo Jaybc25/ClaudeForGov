@@ -6,6 +6,10 @@ const search = document.getElementById('case-search');
 const org = document.getElementById('org-filter');
 const department = document.getElementById('department-filter');
 const route = document.getElementById('route-filter');
+const filterToggle = document.getElementById('filter-toggle');
+const catalogControls = document.getElementById('catalog-controls');
+const mobileFilters = window.matchMedia('(max-width: 640px)');
+let filtersOpen = false;
 const count = document.getElementById('result-count');
 const featuredButton = document.getElementById('view-featured');
 const allButton = document.getElementById('view-all');
@@ -69,6 +73,13 @@ function setDetail(item) {
   const pilotLink = element('a', 'detail-pilot-link', 'Build a pilot value case ↗');
   pilotLink.href = 'pilot-value.html?case=' + encodeURIComponent(item.id);
   detail.append(pilotLink);
+  const backButton = element('button', 'detail-back', 'Back to use cases ↑');
+  backButton.type = 'button';
+  backButton.addEventListener('click', () => {
+    const card = [...grid.querySelectorAll('button[data-id]')].find(button => button.dataset.id === selected);
+    if (card) { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); card.focus({ preventScroll: true }); }
+  });
+  detail.append(backButton);
   grid.querySelectorAll('button[data-id]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.id === selected)));
   placeDetail();
 }
@@ -79,7 +90,16 @@ function placeDetail() {
   else catalogLayout.append(detail);
 }
 
+function syncFilters() {
+  const active = Number(Boolean(search.value.trim())) + Number(org.value !== 'all') + Number(department.value !== 'all') + Number(route.value !== 'all');
+  filterToggle.firstChild.textContent = 'Filters' + (active ? ` (${active} active) ` : ' ');
+  filterToggle.hidden = !mobileFilters.matches;
+  filterToggle.setAttribute('aria-expanded', String(!mobileFilters.matches || filtersOpen));
+  catalogControls.classList.toggle('filters-collapsed', mobileFilters.matches && !filtersOpen);
+}
+
 function render() {
+  syncFilters();
   const q = search.value.trim().toLowerCase();
   const allMatches = useCases.filter(item =>
     (org.value === 'all' || item.orgs.includes(org.value)) &&
@@ -137,6 +157,8 @@ org.addEventListener('change', render);
 department.addEventListener('change', render);
 route.addEventListener('change', render);
 narrowLayout.addEventListener('change', placeDetail);
+mobileFilters.addEventListener('change', syncFilters);
+filterToggle.addEventListener('click', () => { filtersOpen = !filtersOpen; syncFilters(); });
 document.getElementById('clear-filters').addEventListener('click', () => {
   search.value = '';
   org.value = 'all';
