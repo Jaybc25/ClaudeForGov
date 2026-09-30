@@ -7,3 +7,4 @@
 .example-intro{margin:-12px 0 20px;padding:15px 18px;background:#f0e9df;border-left:3px solid #a85d43;border-radius:3px;color:#55483e;font-size:14px;line-height:1.5}
 .example-result{margin:0 0 20px;padding:10px 12px;border:1px solid #be8b71;border-radius:5px;color:#fff1e8;font-size:12px;font-weight:700;line-height:1.45}
 .pilot-form a[hidden],.example-result[hidden]{display:none}
+@media(max-width:680px){.pilot-results{scroll-margin-top:16px}}
