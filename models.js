@@ -97,6 +97,7 @@ function renderEstimate() {
     $("#pilot-next").removeAttribute("href");
     $("#pilot-next").setAttribute("aria-disabled", "true");
     $("#model-limit-note").hidden = true;
+    updateMobileSummary();
     return;
   }
   const limit = modelLimit(model, workload);
@@ -117,7 +118,24 @@ function renderEstimate() {
   else { $("#pilot-next").href = next; $("#pilot-next").removeAttribute("aria-disabled"); }
   $("#comparison-body").innerHTML = MODELS.map((item) => `<tr${item.id === selected ? ' class="is-selected"' : ""}><th scope="row">${item.name}${item.id === selected ? " <span class=\"row-selected\">Selected</span>" : ""}</th><td>$${item.input}</td><td>$${item.output}</td><td>${modelLimit(item, workload) || dollars(cost(item, workload).total)}</td></tr>`).join("");
   try { localStorage.setItem(storageKey, JSON.stringify({ model: selected, input: workload.input, output: workload.output, requests: workload.requests })); } catch { /* Local storage is optional. */ }
+  updateMobileSummary();
 }
+
+function updateMobileSummary() {
+  $("#model-summary-name").textContent = MODELS.find((item) => item.id === selected).name + " · illustrative API estimate";
+  const cost = $("#monthly-total").textContent;
+  $("#model-summary-cost").textContent = cost === "—" ? $("#model-limit-note").hidden ? "Check inputs" : "Exceeds model limit" : cost + " / month";
+  $("#model-live-summary").href = cost === "—" ? "#calculator" : "#estimate-results";
+}
+
+function updateMobileSummaryVisibility() {
+  const models = document.querySelector(".model-section").getBoundingClientRect();
+  const result = $("#estimate-results").getBoundingClientRect();
+  $("#model-live-summary").hidden = !window.matchMedia("(max-width: 680px)").matches || models.top >= innerHeight || result.top <= innerHeight * .75;
+}
+
+window.addEventListener("scroll", updateMobileSummaryVisibility, { passive: true });
+window.addEventListener("resize", updateMobileSummaryVisibility);
 
 $("#estimate-form").addEventListener("input", renderEstimate);
 $("#estimate-form").addEventListener("submit", (event) => event.preventDefault());
@@ -131,3 +149,4 @@ $("#reset-estimate").addEventListener("click", () => {
 });
 renderModels();
 renderEstimate();
+updateMobileSummaryVisibility();
