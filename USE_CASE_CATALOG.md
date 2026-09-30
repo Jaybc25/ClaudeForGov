@@ -1,4 +1,4 @@
-# ClaudeForGov: 57-use-case catalog and filter map
+# ClaudeForGov: 60-use-case catalog and filter map
 
 Current catalog snapshot, September 30, 2026. The source of truth for the live explorer is [`use-cases-data.js`](use-cases-data.js); the actual filtering behavior is in [`use-cases.js`](use-cases.js). This document records the current assignments, which are editorial hypotheses for exploration, not a statement of product availability, agency authorization, or measured results.
 
@@ -17,7 +17,7 @@ flowchart TD
 - **Organization type:** Multi-valued. A workflow can appear under City / town, County, State, Special district / authority, Federal, School district, Public higher education, and Tribal government at the same time. These are browsing fits, not mutually exclusive legal categories.
 - **Department or function:** One primary assignment today. It describes the work, not a mandatory agency org chart. For example, procurement may sit in finance, general services, or administration in a real jurisdiction.
 - **Suggested Claude route:** One starting assignment today: Chat, tasks (the Cowork capability within Claude), Code, or API. A workflow may reasonably have another implementation route, but the explorer does **not** currently store or expose alternate routes. Filtering by another route will not show it.
-- **Featured / All:** Featured is a 16-case editorial shortlist; All contains all 57. It is a view, not another duplicate set of records.
+- **Featured / All:** Featured is an 18-case editorial shortlist; All contains all 60. It is a view, not another duplicate set of records.
 - **Search:** Checks title, summary, department label, route key, and organization labels. It does not search pilot, measure, validation, or ID text.
 
 **Filter rule:** The selected organization, department, route, search text, and Featured/All view are combined with **AND**. An “All” setting removes that particular restriction. Organization membership itself is **OR** within a case: a case tagged City and County matches either organization selection. Each matching use case appears once, even if it has several organization tags.
@@ -26,42 +26,42 @@ For example, **Draft a procurement solicitation** appears in City, County, State
 
 ## Filter vocabulary and reach
 
-Organization tags below are abbreviated in the catalog table. Counts overlap because a case can carry multiple organization tags; do not add the organization counts to obtain 57.
+Organization tags below are abbreviated in the catalog table. Counts overlap because a case can carry multiple organization tags; do not add the organization counts to obtain the catalog total.
 
 | Short label | Explorer label | Cases |
 |---|---|---:|
-| City | City / town | 49 |
-| County | County | 54 |
-| State | State | 47 |
-| District | Special district / authority | 40 |
-| Federal | Federal | 31 |
-| K–12 | School district | 30 |
-| Higher ed | Public higher education | 31 |
-| Tribal | Tribal government | 56 |
+| City | City / town | 50 |
+| County | County | 56 |
+| State | State | 49 |
+| District | Special district / authority | 41 |
+| Federal | Federal | 33 |
+| K–12 | School district | 32 |
+| Higher ed | Public higher education | 32 |
+| Tribal | Tribal government | 59 |
 
 | Department / function | Cases |
 |---|---:|
 | Administration & records | 6 |
-| IT & digital services | 10 |
+| IT & digital services | 11 |
 | Finance & procurement | 7 |
 | Public works & utilities | 7 |
 | Planning & permitting | 5 |
-| Health & human services | 5 |
-| Education | 4 |
+| Health & human services | 6 |
+| Education | 5 |
 | Public safety & emergency management | 3 |
 | Transportation | 3 |
 | Community & economic development | 7 |
 
 | Suggested starting route | Cases |
 |---|---:|
-| Claude Chat | 15 |
-| Claude tasks (Cowork capability) | 17 |
+| Claude Chat | 16 |
+| Claude tasks (Cowork capability) | 19 |
 | Claude Code | 10 |
 | Claude API | 15 |
 
 ## Complete catalog
 
-One row is one canonical workflow. “★” marks one of the 16 Featured cases. The title links to its live explorer detail; the same record supplies its pilot test, measures, and validation questions there. Multiple organization tags on a row mean that the **same record** appears under each of those filters.
+One row is one canonical workflow. “★” marks one of the 18 Featured cases. The title links to its live explorer detail; the same record supplies its pilot test, measures, and validation questions there. Multiple organization tags on a row mean that the **same record** appears under each of those filters.
 
 ### Administration & records (6)
 
@@ -74,101 +74,108 @@ One row is one canonical workflow. “★” marks one of the 16 Featured cases.
 | 5 | [Assemble council and board packets](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=agenda-packets) | `agenda-packets` | Claude tasks (Cowork capability) | City, County, District, K–12, Higher ed, Tribal | ★ |
 | 6 | [Prepare staff onboarding packets](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=staff-onboarding) | `staff-onboarding` | Claude tasks (Cowork capability) | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
 
-### IT & digital services (10)
+### IT & digital services (11)
 
 | # | Workflow | ID | Starting route | Organization types | Featured |
 |---:|---|---|---|---|:---:|
 | 7 | [Rewrite service instructions clearly](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=service-content) | `service-content` | Claude Chat | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
-| 8 | [Modernize an internal application](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=legacy-apps) | `legacy-apps` | Claude Code | City, County, State, District, Federal, K–12, Higher ed, Tribal | ★ |
+| 8 | [Document and modernize a legacy system](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=legacy-apps) | `legacy-apps` | Claude Code | City, County, State, District, Federal, K–12, Higher ed, Tribal | ★ |
 | 9 | [Improve digital forms](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=accessible-forms) | `accessible-forms` | Claude Code | City, County, State, District, Federal, K–12, Higher ed, Tribal | ★ |
 | 10 | [Maintain agency integrations](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=system-integration) | `system-integration` | Claude Code | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
 | 11 | [Expand software test coverage](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=test-coverage) | `test-coverage` | Claude Code | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
 | 12 | [Remediate accessibility defects](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=accessibility-remediation) | `accessibility-remediation` | Claude Code | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
 | 13 | [Improve reporting pipelines](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=data-pipelines) | `data-pipelines` | Claude Code | City, County, State, District, Federal, K–12, Higher ed, Tribal | ★ |
 | 14 | [Fix documented software vulnerabilities](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=security-fixes) | `security-fixes` | Claude Code | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
-| 15 | [Improve service intake portals](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=service-intake) | `service-intake` | Claude Code | City, County, State, District, K–12, Higher ed, Tribal |  |
-| 16 | [Publish clearer open-data tools](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=open-data) | `open-data` | Claude Code | City, County, State, District, Federal, Tribal |  |
+| 15 | [Prepare cybersecurity incident analysis](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=cyber-analyst-assist) | `cyber-analyst-assist` | Claude tasks (Cowork capability) | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
+| 16 | [Improve service intake portals](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=service-intake) | `service-intake` | Claude Code | City, County, State, District, K–12, Higher ed, Tribal |  |
+| 17 | [Publish clearer open-data tools](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=open-data) | `open-data` | Claude Code | City, County, State, District, Federal, Tribal |  |
 
 ### Finance & procurement (7)
 
 | # | Workflow | ID | Starting route | Organization types | Featured |
 |---:|---|---|---|---|:---:|
-| 17 | [Draft grant narratives](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=grant-drafts) | `grant-drafts` | Claude Chat | City, County, State, District, K–12, Higher ed, Tribal |  |
-| 18 | [Prepare budget briefings](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=budget-briefs) | `budget-briefs` | Claude Chat | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
-| 19 | [Summarize procurement materials](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=procurement-briefs) | `procurement-briefs` | Claude tasks (Cowork capability) | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
-| 20 | [Prepare grant progress reports](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=grant-compliance) | `grant-compliance` | Claude tasks (Cowork capability) | City, County, State, District, K–12, Higher ed, Tribal | ★ |
-| 21 | [Review contract renewal packets](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=contract-renewals) | `contract-renewals` | Claude tasks (Cowork capability) | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
-| 22 | [Draft a procurement solicitation](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=procurement-authoring) | `procurement-authoring` | Claude tasks (Cowork capability) | City, County, State, District, Federal, K–12, Higher ed, Tribal | ★ |
-| 23 | [Explain budget variances](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=budget-variance) | `budget-variance` | Claude Chat | City, County, State, District, Federal, K–12, Higher ed, Tribal | ★ |
+| 18 | [Draft grant narratives](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=grant-drafts) | `grant-drafts` | Claude Chat | City, County, State, District, K–12, Higher ed, Tribal |  |
+| 19 | [Prepare budget briefings](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=budget-briefs) | `budget-briefs` | Claude Chat | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
+| 20 | [Summarize procurement materials](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=procurement-briefs) | `procurement-briefs` | Claude tasks (Cowork capability) | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
+| 21 | [Prepare grant progress reports](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=grant-compliance) | `grant-compliance` | Claude tasks (Cowork capability) | City, County, State, District, K–12, Higher ed, Tribal | ★ |
+| 22 | [Review contract renewal packets](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=contract-renewals) | `contract-renewals` | Claude tasks (Cowork capability) | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
+| 23 | [Draft a procurement solicitation](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=procurement-authoring) | `procurement-authoring` | Claude tasks (Cowork capability) | City, County, State, District, Federal, K–12, Higher ed, Tribal | ★ |
+| 24 | [Explain budget variances](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=budget-variance) | `budget-variance` | Claude Chat | City, County, State, District, Federal, K–12, Higher ed, Tribal | ★ |
 
 ### Public works & utilities (7)
 
 | # | Workflow | ID | Starting route | Organization types | Featured |
 |---:|---|---|---|---|:---:|
-| 24 | [Draft inspection reports](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=inspection-reports) | `inspection-reports` | Claude tasks (Cowork capability) | City, County, State, District, Federal, Tribal |  |
-| 25 | [Draft capital project updates](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=capital-projects) | `capital-projects` | Claude tasks (Cowork capability) | City, County, State, District, Higher ed, Tribal |  |
-| 26 | [Maintain infrastructure maps](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=asset-map) | `asset-map` | Claude Code | City, County, State, District, Tribal |  |
-| 27 | [Explain utility service options](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=utility-help) | `utility-help` | Claude API | City, County, District, Tribal | ★ |
-| 28 | [Route nonemergency service requests](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=request-triage) | `request-triage` | Claude API | City, County, District, Tribal | ★ |
-| 29 | [Prepare water service reports](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=water-reports) | `water-reports` | Claude tasks (Cowork capability) | City, County, District, Tribal |  |
-| 30 | [Synthesize asset maintenance patterns](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=asset-patterns) | `asset-patterns` | Claude tasks (Cowork capability) | City, County, State, District, Higher ed, Tribal |  |
+| 25 | [Draft inspection reports](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=inspection-reports) | `inspection-reports` | Claude tasks (Cowork capability) | City, County, State, District, Federal, Tribal |  |
+| 26 | [Draft capital project updates](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=capital-projects) | `capital-projects` | Claude tasks (Cowork capability) | City, County, State, District, Higher ed, Tribal |  |
+| 27 | [Maintain infrastructure maps](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=asset-map) | `asset-map` | Claude Code | City, County, State, District, Tribal |  |
+| 28 | [Explain utility service options](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=utility-help) | `utility-help` | Claude API | City, County, District, Tribal | ★ |
+| 29 | [Route nonemergency service requests](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=request-triage) | `request-triage` | Claude API | City, County, District, Tribal | ★ |
+| 30 | [Prepare water service reports](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=water-reports) | `water-reports` | Claude tasks (Cowork capability) | City, County, District, Tribal |  |
+| 31 | [Synthesize asset maintenance patterns](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=asset-patterns) | `asset-patterns` | Claude tasks (Cowork capability) | City, County, State, District, Higher ed, Tribal |  |
 
 ### Planning & permitting (5)
 
 | # | Workflow | ID | Starting route | Organization types | Featured |
 |---:|---|---|---|---|:---:|
-| 31 | [Explain permit process steps](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=permit-status) | `permit-status` | Claude API | City, County, State, Tribal |  |
-| 32 | [Research land-use guidance](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=zoning-research) | `zoning-research` | Claude Chat | City, County, State, Tribal |  |
-| 33 | [Organize development review files](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=development-review) | `development-review` | Claude tasks (Cowork capability) | City, County, Tribal |  |
-| 34 | [Explain inspection scheduling](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=inspection-scheduling) | `inspection-scheduling` | Claude API | City, County, State, Tribal |  |
-| 35 | [Check permit application completeness](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=permit-completeness) | `permit-completeness` | Claude tasks (Cowork capability) | City, County, State, Tribal | ★ |
+| 32 | [Explain permit process steps](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=permit-status) | `permit-status` | Claude API | City, County, State, Tribal |  |
+| 33 | [Research land-use guidance](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=zoning-research) | `zoning-research` | Claude Chat | City, County, State, Tribal |  |
+| 34 | [Organize development review files](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=development-review) | `development-review` | Claude tasks (Cowork capability) | City, County, Tribal |  |
+| 35 | [Explain inspection scheduling](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=inspection-scheduling) | `inspection-scheduling` | Claude API | City, County, State, Tribal |  |
+| 36 | [Check permit application completeness](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=permit-completeness) | `permit-completeness` | Claude tasks (Cowork capability) | City, County, State, Tribal | ★ |
 
-### Health & human services (5)
-
-| # | Workflow | ID | Starting route | Organization types | Featured |
-|---:|---|---|---|---|:---:|
-| 36 | [Assemble casework packets](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=case-packets) | `case-packets` | Claude tasks (Cowork capability) | County, State, Federal, Tribal |  |
-| 37 | [Organize program monitoring evidence](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=program-monitoring) | `program-monitoring` | Claude tasks (Cowork capability) | County, State, Federal, K–12, Higher ed, Tribal |  |
-| 38 | [Navigate benefit application steps](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=benefits-navigation) | `benefits-navigation` | Claude API | County, State, Federal, Tribal |  |
-| 39 | [Draft public health outreach](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=health-outreach) | `health-outreach` | Claude Chat | County, State, Federal, Tribal | ★ |
-| 40 | [Navigate public health services](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=health-service-info) | `health-service-info` | Claude API | County, State, Federal, Tribal |  |
-
-### Education (4)
+### Health & human services (6)
 
 | # | Workflow | ID | Starting route | Organization types | Featured |
 |---:|---|---|---|---|:---:|
-| 41 | [Create staff training guides](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=training-guides) | `training-guides` | Claude Chat | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
-| 42 | [Navigate campus services](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=campus-services) | `campus-services` | Claude API | Higher ed |  |
-| 43 | [Draft school family communications](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=school-communications) | `school-communications` | Claude Chat | K–12, Tribal |  |
-| 44 | [Find school district services](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=school-service-info) | `school-service-info` | Claude API | K–12, Tribal |  |
+| 37 | [Assemble casework packets](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=case-packets) | `case-packets` | Claude tasks (Cowork capability) | County, State, Federal, Tribal |  |
+| 38 | [Organize program monitoring evidence](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=program-monitoring) | `program-monitoring` | Claude tasks (Cowork capability) | County, State, Federal, K–12, Higher ed, Tribal |  |
+| 39 | [Navigate benefit application steps](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=benefits-navigation) | `benefits-navigation` | Claude API | County, State, Federal, Tribal |  |
+| 40 | [Support caseworker document verification](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=caseworker-verification) | `caseworker-verification` | Claude tasks (Cowork capability) | County, State, Federal, Tribal | ★ |
+| 41 | [Draft public health outreach](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=health-outreach) | `health-outreach` | Claude Chat | County, State, Federal, Tribal | ★ |
+| 42 | [Navigate public health services](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=health-service-info) | `health-service-info` | Claude API | County, State, Federal, Tribal |  |
+
+### Education (5)
+
+| # | Workflow | ID | Starting route | Organization types | Featured |
+|---:|---|---|---|---|:---:|
+| 43 | [Create staff training guides](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=training-guides) | `training-guides` | Claude Chat | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
+| 44 | [Navigate campus services](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=campus-services) | `campus-services` | Claude API | Higher ed |  |
+| 45 | [Draft school family communications](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=school-communications) | `school-communications` | Claude Chat | K–12, Tribal |  |
+| 46 | [Plan standards-aligned lessons](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=teacher-planning) | `teacher-planning` | Claude Chat | K–12, Tribal | ★ |
+| 47 | [Find school district services](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=school-service-info) | `school-service-info` | Claude API | K–12, Tribal |  |
 
 ### Public safety & emergency management (3)
 
 | # | Workflow | ID | Starting route | Organization types | Featured |
 |---:|---|---|---|---|:---:|
-| 45 | [Draft incident briefings](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=incident-briefs) | `incident-briefs` | Claude Chat | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
-| 46 | [Help people find emergency information](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=emergency-information) | `emergency-information` | Claude API | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
-| 47 | [Draft exercise after-action reviews](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=exercise-review) | `exercise-review` | Claude tasks (Cowork capability) | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
+| 48 | [Draft incident briefings](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=incident-briefs) | `incident-briefs` | Claude Chat | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
+| 49 | [Help people find emergency information](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=emergency-information) | `emergency-information` | Claude API | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
+| 50 | [Draft exercise after-action reviews](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=exercise-review) | `exercise-review` | Claude tasks (Cowork capability) | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
 
 ### Transportation (3)
 
 | # | Workflow | ID | Starting route | Organization types | Featured |
 |---:|---|---|---|---|:---:|
-| 48 | [Answer rider service questions](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=transit-information) | `transit-information` | Claude API | City, County, State, District, Tribal |  |
-| 49 | [Brief transportation plans](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=transportation-plans) | `transportation-plans` | Claude Chat | City, County, State, District, Tribal |  |
-| 50 | [Prepare fleet maintenance updates](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=fleet-maintenance) | `fleet-maintenance` | Claude tasks (Cowork capability) | City, County, State, District, Tribal |  |
+| 51 | [Answer rider service questions](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=transit-information) | `transit-information` | Claude API | City, County, State, District, Tribal |  |
+| 52 | [Brief transportation plans](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=transportation-plans) | `transportation-plans` | Claude Chat | City, County, State, District, Tribal |  |
+| 53 | [Prepare fleet maintenance updates](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=fleet-maintenance) | `fleet-maintenance` | Claude tasks (Cowork capability) | City, County, State, District, Tribal |  |
 
 ### Community & economic development (7)
 
 | # | Workflow | ID | Starting route | Organization types | Featured |
 |---:|---|---|---|---|:---:|
-| 51 | [Synthesize public comments](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=public-comments) | `public-comments` | Claude Chat | City, County, State, District, Federal, Tribal | ★ |
-| 52 | [Explore community needs](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=community-needs) | `community-needs` | Claude Chat | City, County, State, Tribal |  |
-| 53 | [Answer resident service questions](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=resident-assistant) | `resident-assistant` | Claude API | City, County, State, Tribal | ★ |
-| 54 | [Improve language access](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=language-access) | `language-access` | Claude API | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
-| 55 | [Guide business licensing questions](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=business-licenses) | `business-licenses` | Claude API | City, County, State, Tribal |  |
-| 56 | [Answer parks and facility questions](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=parks-information) | `parks-information` | Claude API | City, County, District, Tribal |  |
-| 57 | [Assist contact-center staff](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=contact-center-assist) | `contact-center-assist` | Claude API | City, County, State, District, Federal, K–12, Higher ed, Tribal | ★ |
+| 54 | [Synthesize public comments](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=public-comments) | `public-comments` | Claude Chat | City, County, State, District, Federal, Tribal | ★ |
+| 55 | [Explore community needs](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=community-needs) | `community-needs` | Claude Chat | City, County, State, Tribal |  |
+| 56 | [Answer resident service questions](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=resident-assistant) | `resident-assistant` | Claude API | City, County, State, Tribal | ★ |
+| 57 | [Improve language access](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=language-access) | `language-access` | Claude API | City, County, State, District, Federal, K–12, Higher ed, Tribal |  |
+| 58 | [Guide business licensing questions](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=business-licenses) | `business-licenses` | Claude API | City, County, State, Tribal |  |
+| 59 | [Answer parks and facility questions](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=parks-information) | `parks-information` | Claude API | City, County, District, Tribal |  |
+| 60 | [Assist contact-center staff](https://claude-for-gov.vercel.app/use-cases.html?view=all&case=contact-center-assist) | `contact-center-assist` | Claude API | City, County, State, District, Federal, K–12, Higher ed, Tribal | ★ |
+
+## Scope decisions
+
+This catalog includes routine public-safety preparation but excludes automated law-enforcement judgments, court determinations, and live incident-command decisions. It includes caseworker document support only with staff retaining eligibility authority. AI governance belongs in pilot guidance; security authorization paperwork and records disposition remain research candidates rather than separate cards. Public-information assistants remain separate records because their sources, escalation, and quality measures differ, though the interface could group them as a family. Research and literature synthesis for public universities and federal labs remains an explicit scope question.
 
 ## Maintenance and future multi-mapping
 
