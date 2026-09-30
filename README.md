@@ -13,6 +13,8 @@ An independent JayAI project exploring where Claude could help government teams 
 
 The [use case prioritization review](USE_CASE_PRIORITIZATION.md) compares additional user-supplied ideas with the original 52-case catalog and explains the featured shortlist. Five distinct workflows from that review have since been added. The Featured control is live; source-supported evidence tiers and alternate-route explanations remain future work.
 
+The [57-use-case catalog and filter map](USE_CASE_CATALOG.md) lists every current workflow and explains how organization, department, route, and Featured filters intersect.
+
 The explorer is a working planning catalog. Route assignments and organization fit are hypotheses for discovery, not evidence of agency adoption, product eligibility, security authorization, or measured results. Some problem areas were informed by JayAI's separate inventory, but NVIDIA-specific descriptions, blueprint implementation details, product links, and infrastructure recommendations were not copied.
 
 ## Planned experience
